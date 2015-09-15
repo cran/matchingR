@@ -2,340 +2,106 @@
 
 #' @name matchingR-package
 #' @docType package
-#' @title matchingR: Efficient Computation of the Gale-Shapley Algorithm in R 
+#' @title matchingR: Efficient Computation of Matching Algorithms in R
 #'   and C++
-#' @description matchingR is an R Package that quickly computes the Gale-Shapley
-#'   Algorithm for large scale matching markets. This package can be useful when
-#'   the number of market participants is large or when very many matchings need
-#'   to be computed (e.g. for extensive simulations or for estimation purposes).
-#'   The package has successfully been used to simulate preferences and compute 
-#'   the matching with 30,000 participants on each side of the market. The
-#'   algorithm computes the solution to the
-#'   \href{http://en.wikipedia.org/wiki/Stable_matching}{stable marriage
-#'   problem} and to the
-#'   \href{http://en.wikipedia.org/wiki/Hospital_resident}{college admission
-#'   problem}.
-#' @author Jan Tilly
+#' @description matchingR is an R package that efficiently computes the 
+#'   Gale-Shapley algorithm for both the stable marriage problem and the college
+#'   admissions problem, Irving's algorithm for the stable roommate problem, and
+#'   the top trading cycle algorithm for large matching markets. The package 
+#'   provides functions to compute the solutions to the stable marriage problem,
+#'   to the college admission problem, the stable roommates problem, and the 
+#'   house allocation problem.
+#'   
+#'   The package can be useful when the number of market participants is large
+#'   or when very many matchings need to be computed (e.g. for extensive
+#'   simulations or for estimation purposes). The Gale-Shapley function of this
+#'   package has successfully been used to simulate preferences and compute the
+#'   matching with 30,000 participants on each side of the market.
+#'   
+#'   Matching markets are very common in practice and widely studied by
+#'   economists. Popular examples include
+#'   
+#'   the National Resident Matching Program that matches graduates from medical
+#'   school to residency programs at teaching hospitals throughout the United
+#'   States the matching of students to schools including the New York City High
+#'   School Match or the the Boston Public School Match (and many more) the
+#'   matching of kidney donors to recipients in kidney exchanges.
+#' @author Jan Tilly, Nick Janetos
 #' @references Gale, D. and Shapley, L.S. (1962). College admissions and the
-#'   stability of marriage. \emph{The American Mathematical Monthly},
-#'   69(1):9--15.
+#'   stability of marriage. \emph{The American Mathematical Monthly}, 69(1):
+#'   9--15.
+#' @references Irving, R. W. (1985). An efficient algorithm for the "stable
+#'   roommates" problem. \emph{Journal of Algorithms}, 6(4): 577--595
+#' @references Shapley, L., & Scarf, H. (1974). On cores and indivisibility.
+#'   \emph{Journal of Mathematical Economics}, 1(1), 23-37.
 #' @examples
 #' # stable marriage problem
 #' nmen = 25
 #' nwomen = 20
-#' uM = matrix(runif(nmen*nwomen), nrow=nmen, ncol=nwomen)
-#' uW = matrix(runif(nwomen*nmen), nrow=nwomen, ncol=nmen)
+#' uM = matrix(runif(nmen*nwomen), nrow=nwomen, ncol=nmen)
+#' uW = matrix(runif(nwomen*nmen), nrow=nmen, ncol=nwomen)
 #' results = one2one(uM, uW)
 #' checkStability(uM, uW, results$proposals, results$engagements)
-#' 
+#'
 #' # college admissions problem
 #' nstudents = 25
 #' ncolleges = 5
-#' uStudents = matrix(runif(nstudents*ncolleges), nrow=nstudents, ncol=ncolleges)
-#' uColleges = matrix(runif(nstudents*ncolleges), nrow=ncolleges, ncol=nstudents)
+#' uStudents = matrix(runif(nstudents*ncolleges), nrow=ncolleges, ncol=nstudents)
+#' uColleges = matrix(runif(nstudents*ncolleges), nrow=nstudents, ncol=ncolleges)
 #' results = one2many(uStudents, uColleges, slots=4)
 #' checkStability(uStudents, uColleges, results$proposals, results$engagements)
+#'
+#' # stable roommate problem
+#' N = 10
+#' u = matrix(runif(N^2),  nrow = N, ncol = N)
+#' results = onesided(utils = u)
+#' 
+#' # top trading cycle algorithm
+#' N = 10
+#' u = matrix(runif(N^2),  nrow = N, ncol = N)
+#' results = toptrading(utils = u)
 NULL
 
-#' Compute one-to-one matching
-#'
-#' This function returns the proposer-optimal one-to-one matching. The function
-#' needs some description of individuals preferences as inputs. That can be in
-#' the form of cardinal utilities or preference orders (or both).
-#'
-#' @param proposerUtils is a matrix with cardinal utilities of the proposing
-#'   side of the market
-#' @param reviewerUtils is a matrix with cardinal utilities of the courted side
-#'   of the market
-#' @param proposerPref is a matrix with the preference order of the proposing
-#'   side of the market (only required when \code{proposerUtils} is not
-#'   provided)
-#' @param reviewerPref is a matrix with the preference order of the courted side
-#'   of the market (only required when \code{reviewerUtils} is not provided)
-#' @aliases  A list with the successful proposals and engagements:
-#'   \code{proposals} is a vector whose nth element contains the id of the
-#'   reviewer that proposer n is matched to. \code{engagements} is a vector
-#'   whose nth element contains the id of the proposer that reviewer n is
-#'   matched to. \code{single.proposers} is a vector that lists the ids of
-#'   remaining single proposers. \code{single.reviewers} is a vector that lists
-#'   the ids of remaining single reviewers.
-#' @examples
-#' nmen = 25
-#' nwomen = 20
-#' uM = matrix(runif(nmen*nwomen), nrow=nmen, ncol=nwomen)
-#' uW = matrix(runif(nwomen*nmen), nrow=nwomen, ncol=nmen)
-#' results = one2one(uM, uW)
-#'
-#' prefM = sortIndex(uM)
-#' prefW = sortIndex(uW)
-#' results = one2one(proposerPref = prefM, reviewerPref = prefW)
-one2one = function(proposerUtils = NULL,
-                   reviewerUtils = NULL,
-                   proposerPref = NULL,
-                   reviewerPref = NULL) {
-    # validate the inputs
-    args = validateInputs(proposerUtils, reviewerUtils, proposerPref, reviewerPref)
-    
-    # use galeShapleyMatching to compute matching
-    res = galeShapleyMatching(args$proposerPref, args$reviewerUtils)
-    
-    M = length(res$proposals)
-    N = length(res$engagements)
-    
-    # turn these into R indices by adding +1
-    res = c(res, list(
-        "single.proposers" = seq(from = 0, to = M - 1)[res$proposals == N] + 1,
-        "single.reviewers" = seq(from = 0, to = N - 1)[res$engagements ==
-                                                           M] + 1
-    ))
-    
-    res$proposals = matrix(res$proposals, ncol = 1) + 1
-    res$engagements = matrix(res$engagements, ncol = 1) + 1
-    
-    return(res)
+#' Make a package environmental variable with the storage order
+#' 
+#' \code{pkg.env} is a package environment that contains the variable
+#' \code{column.major} that indicates if preferences are stored in column
+#' major order (default) or row major order.
+pkg.env = new.env()
+assign("column.major", TRUE, envir = pkg.env)
+
+#' Store preference in row major order
+#' 
+#' After calling this functions, all preferences should be stored in row major
+#' order.
+set.row.major = function() {
+    assign("column.major", FALSE, envir = pkg.env)
 }
 
-
-#' Compute the one-to-many matching
-#'
-#' This function returns the one-to-many matching. The function needs some
-#' description of individuals preferences as inputs. That can be in the form of
-#' cardinal utilities or preference orders (or both). It is computationally most
-#' efficient to provide cardinal utilities for the proposers
-#' \code{proposerUtils} and cardinal utilities for the reviewers
-#' \code{reviewerUtils}.
-#'
-#' @param proposerUtils is a matrix with cardinal utilities of the proposing
-#'   side of the market
-#' @param reviewerUtils is a matrix with cardinal utilities of the courted side
-#'   of the market
-#' @param proposerPref is a matrix with the preference order of the proposing
-#'   side of the market (only required when \code{proposerUtils} is not
-#'   provided)
-#' @param reviewerPref is a matrix with the preference order of the courted side
-#'   of the market (only required when \code{reviewerUtils} is not provided)
-#' @param slots is the number of slots per reviewer
-#' @return A list with the successful proposals and engagements:
-#'   \code{proposals} is a vector whose nth element contains the id of the
-#'   reviewer that proposer n is matched to. \code{engagements} is a vector
-#'   whose nth element contains the id of the proposer that reviewer n is
-#'   matched to. \code{single.proposers} is a vector that lists the ids of
-#'   remaining single proposers \code{single.reviewers} is a vector that lists
-#'   the ids of remaining single reviewers (if a reviewer has two vacancies left
-#'   it will be listed twice)
-#' @examples
-#' nfirms = 10
-#' nworkers = 25
-#' uFirms = matrix(runif(nfirms*nworkers), nrow=nfirms, ncol=nworkers)
-#' uWorkers = matrix(runif(nfirms*nworkers), nrow=nworkers, ncol=nfirms)
-#' results = one2many(uWorkers, uFirms, slots=2)
-one2many = function(proposerUtils = NULL,
-                    reviewerUtils = NULL,
-                    proposerPref = NULL,
-                    reviewerPref = NULL,
-                    slots = 1) {
-    # validate the inputs
-    args = validateInputs(proposerUtils, reviewerUtils, proposerPref, reviewerPref)
-    
-    # number of firms
-    number_of_firms = NROW(args$reviewerUtils)
-    
-    # expand cardinal utilities corresponding to the slot size
-    proposerUtils = repcol(args$proposerUtils, slots)
-    reviewerUtils = reprow(args$reviewerUtils, slots)
-    
-    # create preference ordering
-    proposerPref = sortIndex(as.matrix(proposerUtils));
-    
-    # use galeShapleyMatching to compute matching
-    res = galeShapleyMatching(proposerPref, reviewerUtils)
-    
-    # number of workers
-    M = length(res$proposals)
-    
-    # number of positions
-    N = length(res$engagements)
-    
-    # collect results
-    res = c(res, list(
-        "single.proposers" = seq(from = 0, to = M - 1)[res$proposals == N] + 1,
-        "single.reviewers" = seq(from = 0, to = N - 1)[res$engagements ==
-                                                           M] + 1
-    ))
-    
-    # collapse engagements (turn these into R indices by adding +1)
-    res$engagements = matrix(res$engagements, ncol = slots, byrow = TRUE) +
-        1
-    
-    # translate proposals into the id of the original firm (turn these into R indices by adding +1)
-    firm.ids = reprow(matrix(seq(from = 0, to = number_of_firms), ncol =
-                                 1), slots)
-    res$proposals = matrix(firm.ids[res$proposals + 1], ncol = 1) + 1
-    
-    # translate single reviewers into the id of the original firm (turn these into R indices by adding +1)
-    res$single.reviewers = firm.ids[res$single.reviewers] + 1
-    
-    return(res)
+#' Store preferences in column major order
+#' 
+#' After calling this functions, all preferences should be stored in column major
+#' order. This is the default.
+set.column.major = function() {
+    assign("column.major", TRUE, envir = pkg.env)
 }
 
-#' Compute the many-to-one matching
-#' 
-#' This function returns the many-to-many matching. The function needs some 
-#' description of individuals preferences as inputs. That can be in the form of 
-#' cardinal utilities or preference orders (or both). It is computationally most
-#' efficient to provide cardinal utilities for the proposers
-#' \code{proposerUtils} and cardinal utilities for the reviewers
-#' \code{reviewerUtils}.
-#' 
-#' @param proposerUtils is a matrix with cardinal utilities of the proposing 
-#'   side of the market
-#' @param reviewerUtils is a matrix with cardinal utilities of the courted side 
-#'   of the market
-#' @param proposerPref is a matrix with the preference order of the proposing 
-#'   side of the market (only required when \code{proposerUtils} is not
-#'   provided)
-#' @param reviewerPref is a matrix with the preference order of the courted side
-#'   of the market (only required when \code{reviewerUtils} is not provided)
-#' @param slots is the number of slots per proposer
-#' @return A list with the successful proposals and engagements: 
-#'   \code{proposals} is a vector whose nth element contains the id of the
-#'   reviewer that proposer n is matched to. \code{engagements} is a vector
-#'   whose nth element contains the id of the proposer that reviewer n is
-#'   matched to. \code{single.proposers} is a vector that lists the ids of
-#'   remaining single proposers (if a proposer has two vacancies left it will be
-#'   listed twice) \code{single.reviewers} is a vector that lists the ids of
-#'   remaining single reviewers
-#' @examples
-#' nfirms = 10
-#' nworkers = 25
-#' uFirms = matrix(runif(nfirms*nworkers), nrow=nfirms, ncol=nworkers)
-#' uWorkers = matrix(runif(nfirms*nworkers), nrow=nworkers, ncol=nfirms)
-#' results = many2one(uFirms, uWorkers, slots=2)
-many2one = function(proposerUtils = NULL,
-                    reviewerUtils = NULL,
-                    proposerPref = NULL,
-                    reviewerPref = NULL,
-                    slots = 1) {
-    # validate the inputs
-    args = validateInputs(proposerUtils, reviewerUtils, proposerPref, reviewerPref)
+# Startup message
+.onAttach = function(libname, pkgname) {
     
-    # number of firms
-    number_of_firms = NROW(args$proposerUtils)
+    packageStartupMessage(
+        "\n=================================\n",
+        "matchingR 1.1 Update Information:\n",
+        "=================================\n",
+        "With this update, we changed the layout of payoff and preference order \n",
+        "matrices. In the matrix `u`, element [i,j] now refers to the utility that \n",
+        "agent [j] receives from being matched to agent [i]. Similarly, in the matrix \n",
+        "`pref`, element [i,j] refers to the id of the individual that agent `j` \n", 
+        "ranks at position `i`. I.e., we store payoffs and preference orders in \n",
+        "column-major order instead of row-major order.\n\n", 
+        "If you rather store preferences in row-major order as in version 1.0 of \n", 
+        "this package, you need to load the package using \n\n",
+        "library(\"matchingR\")\n",
+        "set.row.major()\n\n", appendLF = TRUE)
     
-    # expand cardinal utilities corresponding to the slot size
-    proposerUtils = reprow(args$proposerUtils, slots)
-    reviewerUtils = repcol(args$reviewerUtils, slots)
-    
-    # create preference ordering
-    proposerPref = sortIndex(as.matrix(proposerUtils));
-    
-    # use galeShapleyMatching to compute matching
-    res = galeShapleyMatching(as.matrix(proposerPref), as.matrix(reviewerUtils))
-    
-    # number of firms
-    M = length(res$proposals)
-    
-    # number of workers
-    N = length(res$engagements)
-    
-    # collect results
-    res = c(res, list(
-        "single.proposers" = seq(from = 0, to = M - 1)[res$proposals == N],
-        "single.reviewers" = seq(from = 0, to = N - 1)[res$engagements ==
-                                                           M]
-    ))
-    
-    # collapse proposals (turn these into R indices by adding +1)
-    res$proposals = matrix(res$proposals, ncol = slots, byrow = TRUE) +
-        1
-    
-    # translate engagements into the id of the original firm (turn these into R indices by adding +1)
-    firm.ids = reprow(matrix(seq(from = 0, to = number_of_firms), ncol =
-                                 1), slots)
-    res$engagements = matrix(firm.ids[res$engagements + 1], ncol = 1) +
-        1
-    
-    # translate single proposers into the id of the original firm (turn these into R indices by adding +1)
-    res$single.proposers = firm.ids[res$single.proposers + 1] + 1
-    
-    
-    return(res)
-}
-
-
-#' Input validation
-#' 
-#' This function parses and validates the arguments that are passed on to the 
-#' functions one2one, one2many, and many2one. In particular, it checks if 
-#' user-defined preference orders are complete. If user-defined orderings are
-#' given in terms of R indices (starting at 1), then these are transformed into
-#' C++ indices (starting at zero).
-#' 
-#' @param proposerUtils is a matrix with cardinal utilities of the proposing 
-#'   side of the market
-#' @param reviewerUtils is a matrix with cardinal utilities of the courted side 
-#'   of the market
-#' @param proposerPref is a matrix with the preference order of the proposing 
-#'   side of the market (only required when \code{proposerUtils} is not
-#'   provided)
-#' @param reviewerPref is a matrix with the preference order of the courted side
-#'   of the market (only required when \code{reviewerUtils} is not provided)
-#' @return a list containing proposerUtils, reviewerUtils, proposerPref 
-#'   (reviewerPref are not required after they are translated into
-#'   reviewerUtils).
-validateInputs = function(proposerUtils, reviewerUtils, proposerPref, reviewerPref) {
-    if (!is.null(reviewerPref)) {
-        reviewerPref = checkPreferenceOrder(reviewerPref)
-        if (is.null(reviewerPref)) {
-            stop(
-                "reviewerPref was defined by the user but is not a complete list of preference orderings"
-            )
-        }
-    }
-    
-    if (!is.null(proposerPref)) {
-        proposerPref = checkPreferenceOrder(proposerPref)
-        if (is.null(proposerPref)) {
-            stop(
-                "proposerPref was defined by the user but is not a complete list of preference orderings"
-            )
-        }
-    }
-    
-    # parse inputs
-    if (is.null(proposerPref) && !is.null(proposerUtils)) {
-        proposerPref = sortIndex(as.matrix(proposerUtils))
-    }
-    
-    if (is.null(proposerUtils) && !is.null(proposerPref)) {
-        proposerUtils = -rankIndex(as.matrix(proposerPref))
-    }
-    
-    if (is.null(reviewerUtils) && !is.null(reviewerPref)) {
-        reviewerUtils = -rankIndex(as.matrix(reviewerPref))
-    }
-    
-    if (is.null(proposerPref)) {
-        stop("missing proposer preferences")
-    }
-    
-    if (is.null(reviewerUtils)) {
-        stop("missing reviewer utilities")
-    }
-    
-    # check inputs
-    if (NROW(proposerPref) != NCOL(reviewerUtils)) {
-        stop("preference orderings must be symmetric")
-    }
-    if (NCOL(proposerPref) != NROW(reviewerUtils)) {
-        stop("preference orderings must be symmetric")
-    }
-    
-    return(
-        list(
-            proposerPref = as.matrix(proposerPref),
-            proposerUtils = as.matrix(proposerUtils),
-            reviewerUtils = as.matrix(reviewerUtils)
-        )
-    )
 }

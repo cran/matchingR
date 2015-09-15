@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{rankIndex}
 \alias{rankIndex}
-\title{Rank elements within row of a matrix}
+\title{Rank elements within column of a matrix}
 \usage{
 rankIndex(sortedIdx)
 }
@@ -13,7 +13,7 @@ rankIndex(sortedIdx)
 a rank matrix
 }
 \description{
-This function returns the rank of each element within each row of a matrix.
+This function returns the rank of each element within each column of a matrix.
 The highest element receives the highest rank.
 }
 

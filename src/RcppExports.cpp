@@ -8,36 +8,14 @@
 using namespace Rcpp;
 
 // galeShapleyMatching
-List galeShapleyMatching(const umat proposerPref, const mat reviewerUtils);
+List galeShapleyMatching(const umat& proposerPref, const mat& reviewerUtils);
 RcppExport SEXP matchingR_galeShapleyMatching(SEXP proposerPrefSEXP, SEXP reviewerUtilsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< const umat >::type proposerPref(proposerPrefSEXP);
-    Rcpp::traits::input_parameter< const mat >::type reviewerUtils(reviewerUtilsSEXP);
+    Rcpp::traits::input_parameter< const umat& >::type proposerPref(proposerPrefSEXP);
+    Rcpp::traits::input_parameter< const mat& >::type reviewerUtils(reviewerUtilsSEXP);
     __result = Rcpp::wrap(galeShapleyMatching(proposerPref, reviewerUtils));
-    return __result;
-END_RCPP
-}
-// sortIndex
-umat sortIndex(const mat u);
-RcppExport SEXP matchingR_sortIndex(SEXP uSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< const mat >::type u(uSEXP);
-    __result = Rcpp::wrap(sortIndex(u));
-    return __result;
-END_RCPP
-}
-// rankIndex
-umat rankIndex(const umat sortedIdx);
-RcppExport SEXP matchingR_rankIndex(SEXP sortedIdxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< const umat >::type sortedIdx(sortedIdxSEXP);
-    __result = Rcpp::wrap(rankIndex(sortedIdx));
     return __result;
 END_RCPP
 }
@@ -52,6 +30,85 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< umat >::type proposals(proposalsSEXP);
     Rcpp::traits::input_parameter< umat >::type engagements(engagementsSEXP);
     __result = Rcpp::wrap(checkStability(proposerUtils, reviewerUtils, proposals, engagements));
+    return __result;
+END_RCPP
+}
+// stableRoommateMatching
+List stableRoommateMatching(const umat pref);
+RcppExport SEXP matchingR_stableRoommateMatching(SEXP prefSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const umat >::type pref(prefSEXP);
+    __result = Rcpp::wrap(stableRoommateMatching(pref));
+    return __result;
+END_RCPP
+}
+// checkStabilityRoommate
+bool checkStabilityRoommate(umat& pref, umat& matchings);
+RcppExport SEXP matchingR_checkStabilityRoommate(SEXP prefSEXP, SEXP matchingsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< umat& >::type pref(prefSEXP);
+    Rcpp::traits::input_parameter< umat& >::type matchings(matchingsSEXP);
+    __result = Rcpp::wrap(checkStabilityRoommate(pref, matchings));
+    return __result;
+END_RCPP
+}
+// topTradingCycle
+List topTradingCycle(const umat pref);
+RcppExport SEXP matchingR_topTradingCycle(SEXP prefSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const umat >::type pref(prefSEXP);
+    __result = Rcpp::wrap(topTradingCycle(pref));
+    return __result;
+END_RCPP
+}
+// checkStabilityTopTradingCycle
+bool checkStabilityTopTradingCycle(umat pref, uvec matchings);
+RcppExport SEXP matchingR_checkStabilityTopTradingCycle(SEXP prefSEXP, SEXP matchingsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< umat >::type pref(prefSEXP);
+    Rcpp::traits::input_parameter< uvec >::type matchings(matchingsSEXP);
+    __result = Rcpp::wrap(checkStabilityTopTradingCycle(pref, matchings));
+    return __result;
+END_RCPP
+}
+// sortIndex
+umat sortIndex(const mat& u);
+RcppExport SEXP matchingR_sortIndex(SEXP uSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const mat& >::type u(uSEXP);
+    __result = Rcpp::wrap(sortIndex(u));
+    return __result;
+END_RCPP
+}
+// sortIndexOneSided
+umat sortIndexOneSided(const mat& u);
+RcppExport SEXP matchingR_sortIndexOneSided(SEXP uSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const mat& >::type u(uSEXP);
+    __result = Rcpp::wrap(sortIndexOneSided(u));
+    return __result;
+END_RCPP
+}
+// rankIndex
+umat rankIndex(const umat& sortedIdx);
+RcppExport SEXP matchingR_rankIndex(SEXP sortedIdxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const umat& >::type sortedIdx(sortedIdxSEXP);
+    __result = Rcpp::wrap(rankIndex(sortedIdx));
     return __result;
 END_RCPP
 }

@@ -8,56 +8,32 @@
 #' convenient to call the function \code{one2one()} instead that allows for
 #' more flexible input choices.
 #'
-#' @param proposerPref is a matrix with the preference order of the proposing side of 
+#' @param proposerPref is a matrix with the preference order of the proposing side of
 #' the market
-#' @param reviewerUtils is a matrix with cardinal utilities of the courted side of the 
+#' @param reviewerUtils is a matrix with cardinal utilities of the courted side of the
 #' market
-#' @return A list with the successful proposals and engagements. 
-#' \code{proposals} is a vector whose nth element contains the id of the reviewer 
-#' that proposer n is matched to. 
-#' \code{engagements} is a vector whose nth element contains the id of the proposer 
-#' that reviewer n is matched to.  
+#' @return A list with the successful proposals and engagements.
+#' \code{proposals} is a vector whose nth element contains the id of the reviewer
+#' that proposer n is matched to.
+#' \code{engagements} is a vector whose nth element contains the id of the proposer
+#' that reviewer n is matched to.
 galeShapleyMatching <- function(proposerPref, reviewerUtils) {
     .Call('matchingR_galeShapleyMatching', PACKAGE = 'matchingR', proposerPref, reviewerUtils)
 }
 
-#' Sort indices of a matrix within row
-#' 
-#' Within each row of a matrix, this function returns the indices of each 
-#' element in descending order
-#' 
-#' @param u is the input matrix
-#' @return a matrix with sorted indicies
-#' 
-sortIndex <- function(u) {
-    .Call('matchingR_sortIndex', PACKAGE = 'matchingR', u)
-}
-
-#' Rank elements within row of a matrix
-#' 
-#' This function returns the rank of each element within each row of a matrix.
-#' The highest element receives the highest rank.
-#' 
-#' @param sortedIdx is the input matrix
-#' @return a rank matrix
-#' 
-rankIndex <- function(sortedIdx) {
-    .Call('matchingR_rankIndex', PACKAGE = 'matchingR', sortedIdx)
-}
-
-#' Check if a matching is stable
+#' Check if a two-sided matching is stable
 #'
 #' This function checks if a given matching is stable for a particular set of
-#' preferences. This function can check if a given check one-to-one, 
+#' preferences. This function can check if a given check one-to-one,
 #' one-to-many, or many-to-one matching is stable.
 #'
-#' @param proposerUtils is a matrix with cardinal utilities of the proposing side of the 
+#' @param proposerUtils is a matrix with cardinal utilities of the proposing side of the
 #' market
-#' @param reviewerUtils is a matrix with cardinal utilities of the courted side of the 
+#' @param reviewerUtils is a matrix with cardinal utilities of the courted side of the
 #' market
 #' @param proposals is a matrix that contains the id of the reviewer that a given
-#' proposer is matched to: the first row contains the id of the reviewer that is 
-#' matched with the first proposer, the second row contains the id of the reviewer 
+#' proposer is matched to: the first row contains the id of the reviewer that is
+#' matched with the first proposer, the second row contains the id of the reviewer
 #' that is matched with the second proposer, etc. The column dimension accommodates
 #' proposers with multiple slots.
 #' @param engagements is a matrix that contains the id of the proposer that a given
@@ -66,5 +42,94 @@ rankIndex <- function(sortedIdx) {
 #' @return true if the matching is stable, false otherwise
 checkStability <- function(proposerUtils, reviewerUtils, proposals, engagements) {
     .Call('matchingR_checkStability', PACKAGE = 'matchingR', proposerUtils, reviewerUtils, proposals, engagements)
+}
+
+#' Computes a stable roommate matching
+#'
+#' This function computes the Irving (1985) algorithm for finding
+#' a stable matching in a one-sided matching market. Note that neither
+#' existence nor uniqueness is guaranteed, this algorithm finds one
+#' matching, not all of them. If no matching exists, returns 0.
+#'
+#' @param pref A matrix with agent's cardinal preferences. Column i is agent i's preferences.
+#' @return A list with the matchings made. Unmatched agents are 'matched' to N.
+stableRoommateMatching <- function(pref) {
+    .Call('matchingR_stableRoommateMatching', PACKAGE = 'matchingR', pref)
+}
+
+#' Check if a two-sided matching is stable
+#'
+#' This function checks if a given matching is stable for a particular set of
+#' preferences. This function can check if a given check one-to-one,
+#' one-to-many, or many-to-one matching is stable.
+#'
+#' @param pref is a matrix with ordinal rankings of the participants
+#' @param matchings is an nx1 matrix encoding who is matched to whom using
+#' R style indexing
+#' @return true if the matching is stable, false otherwise
+checkStabilityRoommate <- function(pref, matchings) {
+    .Call('matchingR_checkStabilityRoommate', PACKAGE = 'matchingR', pref, matchings)
+}
+
+#' Computes the top trading cycle algorithm
+#'
+#' This function uses the top trading cycle algorithm to find a stable trade between agents,
+#' each with some indivisible good, and with preferences over the goods of other agents. Each
+#' agent is matched to one other agent, and matchings are not necessarily two-way. Agents may
+#' be matched with themselves. 
+#'
+#' @param pref A matrix with agent's cardinal preferences. Column i is agent i's preferences.
+#' @return A list with the matchings made. The matchings are encoded as follows: The first value
+#' in the list is the individual to whom agent 0 will be giving his good, the second value in the list
+#' is the individual to whom agent 1 will be giving his good, etc. 
+topTradingCycle <- function(pref) {
+    .Call('matchingR_topTradingCycle', PACKAGE = 'matchingR', pref)
+}
+
+#' Check if a one-sided matching for the top trading cycle algorithm is stable
+#'
+#' @param pref is a matrix with ordinal rankings of the participants
+#' @param matchings is an nx1 matrix encoding who is matched to whom using
+#' R style indexing
+#' @return true if the matching is stable, false otherwise
+checkStabilityTopTradingCycle <- function(pref, matchings) {
+    .Call('matchingR_checkStabilityTopTradingCycle', PACKAGE = 'matchingR', pref, matchings)
+}
+
+#' Sort indices of a matrix within a column
+#'
+#' Within each column of a matrix, this function returns the indices of each
+#' element in descending order
+#'
+#' @param u is the input matrix
+#' @return a matrix with sorted indicies
+#'
+sortIndex <- function(u) {
+    .Call('matchingR_sortIndex', PACKAGE = 'matchingR', u)
+}
+
+#' Ranks elements with column of a matrix, assuming a one-sided market.
+#'
+#' Returns the rank of each element with each column of a matrix. So,
+#' if row 34 is the highest number for column 3, then the first row of
+#' column 3 will be 34 -- unless it is column 34, in which case it will
+#' be 35, to adjust for the fact that this is a single-sided market.
+#'
+#' @param u A matrix with agent's cardinal preferences. Column i is agent i's preferences.
+#' @return A list with the matchings made.
+sortIndexOneSided <- function(u) {
+    .Call('matchingR_sortIndexOneSided', PACKAGE = 'matchingR', u)
+}
+
+#' Rank elements within column of a matrix
+#'
+#' This function returns the rank of each element within each column of a matrix.
+#' The highest element receives the highest rank.
+#'
+#' @param sortedIdx is the input matrix
+#' @return a rank matrix
+#'
+rankIndex <- function(sortedIdx) {
+    .Call('matchingR_rankIndex', PACKAGE = 'matchingR', sortedIdx)
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{sortIndex}
 \alias{sortIndex}
-\title{Sort indices of a matrix within row}
+\title{Sort indices of a matrix within a column}
 \usage{
 sortIndex(u)
 }
@@ -13,7 +13,7 @@ sortIndex(u)
 a matrix with sorted indicies
 }
 \description{
-Within each row of a matrix, this function returns the indices of each
+Within each column of a matrix, this function returns the indices of each
 element in descending order
 }
 

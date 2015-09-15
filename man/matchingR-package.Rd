@@ -3,44 +3,71 @@
 \docType{package}
 \name{matchingR-package}
 \alias{matchingR-package}
-\title{matchingR: Efficient Computation of the Gale-Shapley Algorithm in R
+\title{matchingR: Efficient Computation of Matching Algorithms in R
   and C++}
 \description{
-matchingR is an R Package that quickly computes the Gale-Shapley
-  Algorithm for large scale matching markets. This package can be useful when
-  the number of market participants is large or when very many matchings need
-  to be computed (e.g. for extensive simulations or for estimation purposes).
-  The package has successfully been used to simulate preferences and compute
-  the matching with 30,000 participants on each side of the market. The
-  algorithm computes the solution to the
-  \href{http://en.wikipedia.org/wiki/Stable_matching}{stable marriage
-  problem} and to the
-  \href{http://en.wikipedia.org/wiki/Hospital_resident}{college admission
-  problem}.
+matchingR is an R package that efficiently computes the
+  Gale-Shapley algorithm for both the stable marriage problem and the college
+  admissions problem, Irving's algorithm for the stable roommate problem, and
+  the top trading cycle algorithm for large matching markets. The package
+  provides functions to compute the solutions to the stable marriage problem,
+  to the college admission problem, the stable roommates problem, and the
+  house allocation problem.
+
+  The package can be useful when the number of market participants is large
+  or when very many matchings need to be computed (e.g. for extensive
+  simulations or for estimation purposes). The Gale-Shapley function of this
+  package has successfully been used to simulate preferences and compute the
+  matching with 30,000 participants on each side of the market.
+
+  Matching markets are very common in practice and widely studied by
+  economists. Popular examples include
+
+  the National Resident Matching Program that matches graduates from medical
+  school to residency programs at teaching hospitals throughout the United
+  States the matching of students to schools including the New York City High
+  School Match or the the Boston Public School Match (and many more) the
+  matching of kidney donors to recipients in kidney exchanges.
 }
 \examples{
 # stable marriage problem
 nmen = 25
 nwomen = 20
-uM = matrix(runif(nmen*nwomen), nrow=nmen, ncol=nwomen)
-uW = matrix(runif(nwomen*nmen), nrow=nwomen, ncol=nmen)
+uM = matrix(runif(nmen*nwomen), nrow=nwomen, ncol=nmen)
+uW = matrix(runif(nwomen*nmen), nrow=nmen, ncol=nwomen)
 results = one2one(uM, uW)
 checkStability(uM, uW, results$proposals, results$engagements)
 
 # college admissions problem
 nstudents = 25
 ncolleges = 5
-uStudents = matrix(runif(nstudents*ncolleges), nrow=nstudents, ncol=ncolleges)
-uColleges = matrix(runif(nstudents*ncolleges), nrow=ncolleges, ncol=nstudents)
+uStudents = matrix(runif(nstudents*ncolleges), nrow=ncolleges, ncol=nstudents)
+uColleges = matrix(runif(nstudents*ncolleges), nrow=nstudents, ncol=ncolleges)
 results = one2many(uStudents, uColleges, slots=4)
 checkStability(uStudents, uColleges, results$proposals, results$engagements)
+
+# stable roommate problem
+N = 10
+u = matrix(runif(N^2),  nrow = N, ncol = N)
+results = onesided(utils = u)
+
+# top trading cycle algorithm
+N = 10
+u = matrix(runif(N^2),  nrow = N, ncol = N)
+results = toptrading(utils = u)
 }
 \author{
-Jan Tilly
+Jan Tilly, Nick Janetos
 }
 \references{
 Gale, D. and Shapley, L.S. (1962). College admissions and the
-  stability of marriage. \emph{The American Mathematical Monthly},
-  69(1):9--15.
+  stability of marriage. \emph{The American Mathematical Monthly}, 69(1):
+  9--15.
+
+Irving, R. W. (1985). An efficient algorithm for the "stable
+  roommates" problem. \emph{Journal of Algorithms}, 6(4): 577--595
+
+Shapley, L., & Scarf, H. (1974). On cores and indivisibility.
+  \emph{Journal of Mathematical Economics}, 1(1), 23-37.
 }
 
