@@ -88,12 +88,12 @@ uM = lambda * matrix(runif(n), nrow = n, ncol = n) +
 <pre class="r"><code># womens's preferences
 uW = lambda * matrix(runif(n), nrow = n, ncol = n) +
     (1 - lambda) * runif(n ^ 2)</code></pre>
-<p>We benchmark the matching functions for five different market sizes</p>
+<p>We benchmark the matching functions for three different market sizes</p>
 <pre class="r"><code># market sizes
-N = c(100, 500, 1000, 2500, 5000)</code></pre>
-<p>and five different levels of commonality</p>
+N = c(100, 500, 1000)</code></pre>
+<p>and three different levels of commonality</p>
 <pre class="r"><code># levels of commonality
-Commonality = c(0.0, 0.25, 0.5, 0.75, 0.99)</code></pre>
+Commonality = c(0.25, 0.5, 0.75)</code></pre>
 <p>The test function is constructed as follows:</p>
 <pre class="r"><code>set.seed(1)
 
@@ -110,53 +110,29 @@ test_one2one = function(n, lambda) {
 <thead>
 <tr class="header">
 <th align="left"></th>
-<th align="right">lambda=0.00</th>
 <th align="right">lambda=0.25</th>
 <th align="right">lambda=0.50</th>
 <th align="right">lambda=0.75</th>
-<th align="right">lambda=0.99</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">N=100</td>
-<td align="right">0.001193</td>
-<td align="right">0.001186</td>
-<td align="right">0.001214</td>
-<td align="right">0.001287</td>
-<td align="right">0.001342</td>
+<td align="right">0.001285</td>
+<td align="right">0.001303</td>
+<td align="right">0.001319</td>
 </tr>
 <tr class="even">
 <td align="left">N=500</td>
-<td align="right">0.028864</td>
-<td align="right">0.028185</td>
-<td align="right">0.028727</td>
-<td align="right">0.030068</td>
-<td align="right">0.043454</td>
+<td align="right">0.028648</td>
+<td align="right">0.028898</td>
+<td align="right">0.030148</td>
 </tr>
 <tr class="odd">
 <td align="left">N=1,000</td>
-<td align="right">0.120157</td>
-<td align="right">0.119447</td>
-<td align="right">0.122903</td>
-<td align="right">0.138509</td>
-<td align="right">0.360562</td>
-</tr>
-<tr class="even">
-<td align="left">N=2,500</td>
-<td align="right">0.770125</td>
-<td align="right">0.787657</td>
-<td align="right">0.870456</td>
-<td align="right">1.002365</td>
-<td align="right">3.356668</td>
-</tr>
-<tr class="odd">
-<td align="left">N=5,000</td>
-<td align="right">3.309170</td>
-<td align="right">3.292047</td>
-<td align="right">3.537508</td>
-<td align="right">4.552012</td>
-<td align="right">19.159520</td>
+<td align="right">0.122227</td>
+<td align="right">0.123309</td>
+<td align="right">0.138565</td>
 </tr>
 </tbody>
 </table>
@@ -187,227 +163,155 @@ results = onesided(utils = u)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">N=2</td>
-<td align="right">100</td>
-<td align="right">93</td>
-<td align="right">0.93</td>
+<td align="right">50</td>
+<td align="right">47</td>
+<td align="right">0.94</td>
 <td align="right">0.961</td>
-<td align="right">0.000489</td>
+<td align="right">0.000449</td>
 </tr>
 <tr class="even">
 <td align="left">N=3</td>
-<td align="right">100</td>
-<td align="right">86</td>
-<td align="right">0.86</td>
+<td align="right">50</td>
+<td align="right">46</td>
+<td align="right">0.92</td>
 <td align="right">0.931</td>
-<td align="right">0.000587</td>
+<td align="right">0.000639</td>
 </tr>
 <tr class="odd">
 <td align="left">N=4</td>
-<td align="right">100</td>
-<td align="right">95</td>
-<td align="right">0.95</td>
+<td align="right">50</td>
+<td align="right">40</td>
+<td align="right">0.80</td>
 <td align="right">0.909</td>
-<td align="right">0.000766</td>
+<td align="right">0.000782</td>
 </tr>
 <tr class="even">
 <td align="left">N=5</td>
-<td align="right">100</td>
-<td align="right">86</td>
-<td align="right">0.86</td>
+<td align="right">50</td>
+<td align="right">41</td>
+<td align="right">0.82</td>
 <td align="right">0.868</td>
-<td align="right">0.000907</td>
+<td align="right">0.000972</td>
 </tr>
 <tr class="odd">
 <td align="left">N=6</td>
-<td align="right">100</td>
-<td align="right">77</td>
-<td align="right">0.77</td>
+<td align="right">50</td>
+<td align="right">45</td>
+<td align="right">0.90</td>
 <td align="right">0.871</td>
-<td align="right">0.001111</td>
+<td align="right">0.001170</td>
 </tr>
 <tr class="even">
 <td align="left">N=7</td>
-<td align="right">100</td>
-<td align="right">84</td>
-<td align="right">0.84</td>
+<td align="right">50</td>
+<td align="right">40</td>
+<td align="right">0.80</td>
 <td align="right">0.867</td>
-<td align="right">0.001286</td>
+<td align="right">0.001330</td>
 </tr>
 <tr class="odd">
 <td align="left">N=8</td>
-<td align="right">100</td>
-<td align="right">83</td>
-<td align="right">0.83</td>
+<td align="right">50</td>
+<td align="right">41</td>
+<td align="right">0.82</td>
 <td align="right">0.857</td>
-<td align="right">0.001502</td>
+<td align="right">0.001585</td>
 </tr>
 <tr class="even">
 <td align="left">N=9</td>
-<td align="right">100</td>
-<td align="right">80</td>
-<td align="right">0.80</td>
+<td align="right">50</td>
+<td align="right">45</td>
+<td align="right">0.90</td>
 <td align="right">0.830</td>
-<td align="right">0.001704</td>
+<td align="right">0.001771</td>
 </tr>
 <tr class="odd">
 <td align="left">N=10</td>
-<td align="right">100</td>
-<td align="right">79</td>
-<td align="right">0.79</td>
+<td align="right">50</td>
+<td align="right">38</td>
+<td align="right">0.76</td>
 <td align="right">0.815</td>
-<td align="right">0.001964</td>
+<td align="right">0.002051</td>
 </tr>
 <tr class="even">
 <td align="left">N=11</td>
-<td align="right">100</td>
-<td align="right">88</td>
-<td align="right">0.88</td>
+<td align="right">50</td>
+<td align="right">40</td>
+<td align="right">0.80</td>
 <td align="right">0.808</td>
-<td align="right">0.002071</td>
+<td align="right">0.002276</td>
 </tr>
 <tr class="odd">
 <td align="left">N=12</td>
-<td align="right">100</td>
-<td align="right">80</td>
-<td align="right">0.80</td>
+<td align="right">50</td>
+<td align="right">42</td>
+<td align="right">0.84</td>
 <td align="right">0.816</td>
-<td align="right">0.002420</td>
+<td align="right">0.002733</td>
 </tr>
 <tr class="even">
 <td align="left">N=13</td>
-<td align="right">100</td>
-<td align="right">80</td>
-<td align="right">0.80</td>
+<td align="right">50</td>
+<td align="right">41</td>
+<td align="right">0.82</td>
 <td align="right">0.788</td>
-<td align="right">0.002630</td>
+<td align="right">0.002745</td>
 </tr>
 <tr class="odd">
 <td align="left">N=14</td>
-<td align="right">100</td>
-<td align="right">74</td>
-<td align="right">0.74</td>
+<td align="right">50</td>
+<td align="right">45</td>
+<td align="right">0.90</td>
 <td align="right">0.750</td>
-<td align="right">0.003169</td>
+<td align="right">0.003028</td>
 </tr>
 <tr class="even">
 <td align="left">N=15</td>
-<td align="right">100</td>
-<td align="right">74</td>
-<td align="right">0.74</td>
+<td align="right">50</td>
+<td align="right">41</td>
+<td align="right">0.82</td>
 <td align="right">0.766</td>
-<td align="right">0.003282</td>
+<td align="right">0.003361</td>
 </tr>
 <tr class="odd">
 <td align="left">N=16</td>
-<td align="right">100</td>
-<td align="right">77</td>
-<td align="right">0.77</td>
+<td align="right">50</td>
+<td align="right">38</td>
+<td align="right">0.76</td>
 <td align="right">0.755</td>
-<td align="right">0.003649</td>
+<td align="right">0.003620</td>
 </tr>
 <tr class="even">
 <td align="left">N=17</td>
-<td align="right">100</td>
-<td align="right">80</td>
-<td align="right">0.80</td>
+<td align="right">50</td>
+<td align="right">36</td>
+<td align="right">0.72</td>
 <td align="right">0.770</td>
-<td align="right">0.003803</td>
+<td align="right">0.003945</td>
 </tr>
 <tr class="odd">
 <td align="left">N=18</td>
-<td align="right">100</td>
-<td align="right">73</td>
-<td align="right">0.73</td>
+<td align="right">50</td>
+<td align="right">36</td>
+<td align="right">0.72</td>
 <td align="right">0.740</td>
-<td align="right">0.003968</td>
+<td align="right">0.004184</td>
 </tr>
 <tr class="even">
 <td align="left">N=19</td>
-<td align="right">100</td>
-<td align="right">75</td>
-<td align="right">0.75</td>
+<td align="right">50</td>
+<td align="right">35</td>
+<td align="right">0.70</td>
 <td align="right">0.725</td>
-<td align="right">0.004338</td>
+<td align="right">0.004525</td>
 </tr>
 <tr class="odd">
 <td align="left">N=20</td>
-<td align="right">100</td>
-<td align="right">79</td>
-<td align="right">0.79</td>
+<td align="right">50</td>
+<td align="right">38</td>
+<td align="right">0.76</td>
 <td align="right">0.745</td>
-<td align="right">0.004485</td>
-</tr>
-<tr class="even">
-<td align="left">N=21</td>
-<td align="right">100</td>
-<td align="right">74</td>
-<td align="right">0.74</td>
-<td align="right">0.775</td>
-<td align="right">0.004827</td>
-</tr>
-<tr class="odd">
-<td align="left">N=22</td>
-<td align="right">100</td>
-<td align="right">83</td>
-<td align="right">0.83</td>
-<td align="right">0.740</td>
-<td align="right">0.005669</td>
-</tr>
-<tr class="even">
-<td align="left">N=23</td>
-<td align="right">100</td>
-<td align="right">80</td>
-<td align="right">0.80</td>
-<td align="right">0.740</td>
-<td align="right">0.006979</td>
-</tr>
-<tr class="odd">
-<td align="left">N=24</td>
-<td align="right">100</td>
-<td align="right">67</td>
-<td align="right">0.67</td>
-<td align="right">0.730</td>
-<td align="right">0.006302</td>
-</tr>
-<tr class="even">
-<td align="left">N=25</td>
-<td align="right">100</td>
-<td align="right">80</td>
-<td align="right">0.80</td>
-<td align="right">0.710</td>
-<td align="right">0.006198</td>
-</tr>
-<tr class="odd">
-<td align="left">N=30</td>
-<td align="right">100</td>
-<td align="right">61</td>
-<td align="right">0.61</td>
-<td align="right">0.725</td>
-<td align="right">0.007892</td>
-</tr>
-<tr class="even">
-<td align="left">N=35</td>
-<td align="right">100</td>
-<td align="right">68</td>
-<td align="right">0.68</td>
-<td align="right">0.670</td>
-<td align="right">0.011884</td>
-</tr>
-<tr class="odd">
-<td align="left">N=40</td>
-<td align="right">100</td>
-<td align="right">70</td>
-<td align="right">0.70</td>
-<td align="right">0.675</td>
-<td align="right">0.013520</td>
-</tr>
-<tr class="even">
-<td align="left">N=45</td>
-<td align="right">100</td>
-<td align="right">61</td>
-<td align="right">0.61</td>
-<td align="right">0.690</td>
-<td align="right">0.017354</td>
+<td align="right">0.004859</td>
 </tr>
 </tbody>
 </table>
@@ -427,80 +331,49 @@ results = toptrading(utils = u)</code></pre>
 <thead>
 <tr class="header">
 <th align="left"></th>
-<th align="right">No. of instances</th>
 <th align="right">Average cpu time</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">N=2</td>
-<td align="right">1</td>
-<td align="right">0.000103</td>
+<td align="right">0.000116</td>
 </tr>
 <tr class="even">
 <td align="left">N=4</td>
-<td align="right">1</td>
-<td align="right">0.000121</td>
+<td align="right">0.000072</td>
 </tr>
 <tr class="odd">
 <td align="left">N=8</td>
-<td align="right">1</td>
-<td align="right">0.000142</td>
+<td align="right">0.000111</td>
 </tr>
 <tr class="even">
 <td align="left">N=16</td>
-<td align="right">1</td>
-<td align="right">0.000132</td>
+<td align="right">0.000311</td>
 </tr>
 <tr class="odd">
 <td align="left">N=32</td>
-<td align="right">1</td>
-<td align="right">0.000282</td>
+<td align="right">0.000166</td>
 </tr>
 <tr class="even">
 <td align="left">N=64</td>
-<td align="right">1</td>
-<td align="right">0.000484</td>
+<td align="right">0.000464</td>
 </tr>
 <tr class="odd">
 <td align="left">N=128</td>
-<td align="right">1</td>
-<td align="right">0.001831</td>
+<td align="right">0.001754</td>
 </tr>
 <tr class="even">
 <td align="left">N=256</td>
-<td align="right">1</td>
-<td align="right">0.006944</td>
+<td align="right">0.006857</td>
 </tr>
 <tr class="odd">
 <td align="left">N=512</td>
-<td align="right">1</td>
-<td align="right">0.028231</td>
+<td align="right">0.028296</td>
 </tr>
 <tr class="even">
 <td align="left">N=1,024</td>
-<td align="right">1</td>
-<td align="right">0.119843</td>
-</tr>
-<tr class="odd">
-<td align="left">N=2,048</td>
-<td align="right">1</td>
-<td align="right">0.490695</td>
-</tr>
-<tr class="even">
-<td align="left">N=4,096</td>
-<td align="right">1</td>
-<td align="right">2.009720</td>
-</tr>
-<tr class="odd">
-<td align="left">N=8,192</td>
-<td align="right">1</td>
-<td align="right">8.350655</td>
-</tr>
-<tr class="even">
-<td align="left">N=12,288</td>
-<td align="right">1</td>
-<td align="right">19.549448</td>
+<td align="right">0.119512</td>
 </tr>
 </tbody>
 </table>

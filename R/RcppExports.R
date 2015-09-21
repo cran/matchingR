@@ -3,20 +3,19 @@
 
 #' Compute the Gale-Shapley Algorithm
 #'
-#' This function computes the Gale-Shapley Algorithm with one-to-one matching.
-#' This function requires very specific types of arguments. It might be more
-#' convenient to call the function \code{one2one()} instead that allows for
-#' more flexible input choices.
+#' This function provides an R wrapper for the C++ backend. Users should not 
+#' call this function directly and instead use \code{one2one}, \code{many2one},
+#' \code{one2many}. 
 #'
 #' @param proposerPref is a matrix with the preference order of the proposing side of
-#' the market
+#' the market (using C++ indexing that starts at zero)
 #' @param reviewerUtils is a matrix with cardinal utilities of the courted side of the
 #' market
 #' @return A list with the successful proposals and engagements.
 #' \code{proposals} is a vector whose nth element contains the id of the reviewer
-#' that proposer n is matched to.
+#' that proposer n is matched to (using C++ indexing that starts at zero).
 #' \code{engagements} is a vector whose nth element contains the id of the proposer
-#' that reviewer n is matched to.
+#' that reviewer n is matched to (using C++ indexing that starts at zero).
 galeShapleyMatching <- function(proposerPref, reviewerUtils) {
     .Call('matchingR_galeShapleyMatching', PACKAGE = 'matchingR', proposerPref, reviewerUtils)
 }
@@ -57,11 +56,11 @@ stableRoommateMatching <- function(pref) {
     .Call('matchingR_stableRoommateMatching', PACKAGE = 'matchingR', pref)
 }
 
-#' Check if a two-sided matching is stable
+#' Check if a matching solves the stable roommate problem
 #'
 #' This function checks if a given matching is stable for a particular set of
-#' preferences. This function can check if a given check one-to-one,
-#' one-to-many, or many-to-one matching is stable.
+#' preferences. This function checks if there's an unmatched pair that would
+#' rather be matched with each other than with their assigned partners.
 #'
 #' @param pref is a matrix with ordinal rankings of the participants
 #' @param matchings is an nx1 matrix encoding who is matched to whom using

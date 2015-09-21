@@ -25,42 +25,106 @@ Installation
 ------------
 
 `matchingR` can be installed from [CRAN](http://cran.r-project.org/web/packages/matchingR/):
-```{r}
+```R
 install.packages("matchingR")
 ```
 The latest development release is available from GitHub:
-```{r}
+```R
 #install.packages("devtools")
-devtools::install_github("jtilly/matchingR.git")
+devtools::install_github("jtilly/matchingR")
 ```
 
 ## Examples
-```{r}
-# stable marriage problem
-nmen = 25
-nwomen = 20
-uM = matrix(runif(nmen*nwomen), nrow=nwomen, ncol=nmen)
-uW = matrix(runif(nwomen*nmen), nrow=nmen, ncol=nwomen)
-results = one2one(uM, uW)
-checkStability(uM, uW, results$proposals, results$engagements)
 
-# college admissions problem
-nstudents = 25
-ncolleges = 5
+### Gale-Shapley Algorithm for Two-Sided Markets
+```R
+# stable marriage problem with three men and two women
+uM = matrix(c(1.0, 0.5, 0.0,
+              0.5, 0.0, 0.5), nrow = 2, ncol = 3, byrow = TRUE)
+
+uW = matrix(c(0.0, 1.0,
+              0.5, 0.0,
+              1.0, 0.5), nrow = 3, ncol = 2, byrow = TRUE)
+
+matching = one2one(uM, uW)
+matching$engagements
+#>      [,1]
+#> [1,]    3
+#> [2,]    1
+matching$single.proposers
+#> [1] 2
+checkStability(uM, uW, matching$proposals, matching$engagements)
+#> [1] TRUE
+
+# college admissions problem with five students and two colleges with two slots each
+set.seed(1)
+nstudents = 5
+ncolleges = 2
 uStudents = matrix(runif(nstudents*ncolleges), nrow=ncolleges, ncol=nstudents)
+uStudents
+#>           [,1]      [,2]      [,3]      [,4]       [,5]
+#> [1,] 0.2655087 0.5728534 0.2016819 0.9446753 0.62911404
+#> [2,] 0.3721239 0.9082078 0.8983897 0.6607978 0.06178627
 uColleges = matrix(runif(nstudents*ncolleges), nrow=nstudents, ncol=ncolleges)
-results = one2many(uStudents, uColleges, slots=4)
-checkStability(uStudents, uColleges, results$proposals, results$engagements)
+uColleges
+#>           [,1]      [,2]
+#> [1,] 0.2059746 0.4976992
+#> [2,] 0.1765568 0.7176185
+#> [3,] 0.6870228 0.9919061
+#> [4,] 0.3841037 0.3800352
+#> [5,] 0.7698414 0.7774452
+matching = one2many(uStudents, uColleges, slots=2)
+matching$engagements
+#>      [,1] [,2]
+#> [1,]    5    4
+#> [2,]    3    2
+matching$single.proposers
+#> [1] 1
+checkStability(uStudents, uColleges, matching$proposals, matching$engagements)
+#> [1] TRUE
+```
 
-# stable roommate problem
-n = 10
-u = matrix(runif(N^2),  nrow = n, ncol = n)
+### Irving's Algorithm for the Stable Roommate Problem
+```R
+# stable roommate problem with four students and two rooms
+set.seed(2)
+n = 4
+u = matrix(runif(n^2),  nrow = n, ncol = n)
+u
+#>           [,1]      [,2]      [,3]      [,4]
+#> [1,] 0.1848823 0.9438393 0.4680185 0.7605133
+#> [2,] 0.7023740 0.9434750 0.5499837 0.1808201
+#> [3,] 0.5733263 0.1291590 0.5526741 0.4052822
+#> [4,] 0.1680519 0.8334488 0.2388948 0.8535485
 results = onesided(utils = u)
+results
+#>      [,1]
+#> [1,]    2
+#> [2,]    1
+#> [3,]    4
+#> [4,]    3
+```
 
-# top trading cycle algorithm
-n = 10
-u = matrix(runif(N^2),  nrow = n, ncol = n)
+### Top-Trading Cycle Algorithm
+```R
+# top trading cycle algorithm with four houses
+set.seed(2)
+n = 4
+u = matrix(runif(n^2),  nrow = n, ncol = n)
+u
+#>           [,1]      [,2]      [,3]      [,4]
+#> [1,] 0.1848823 0.9438393 0.4680185 0.7605133
+#> [2,] 0.7023740 0.9434750 0.5499837 0.1808201
+#> [3,] 0.5733263 0.1291590 0.5526741 0.4052822
+#> [4,] 0.1680519 0.8334488 0.2388948 0.8535485
 results = toptrading(utils = u)
+results
+#> $matchings
+#>      [,1]
+#> [1,]    2
+#> [2,]    1
+#> [3,]    3
+#> [4,]    4
 ```
 
 ## Documentation

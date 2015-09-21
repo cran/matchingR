@@ -7,7 +7,7 @@ uM = matrix(c(1.0, 0.5, 0.0,
               0.0, 1.0, 1.0), nrow = 3, ncol = 3, byrow = TRUE)
 
 ## ---- echo=FALSE---------------------------------------------------------
-dimnames(uM) = list(rows = c('Man 1', 'Man 2', 'Man 3'), cols = c('Woman 1', 'Woman 2', 'Woman 3'))
+dimnames(uM) = list(rows = c('Woman 1', 'Woman 2', 'Woman 3'), cols = c('Man 1', 'Man 2', 'Man 3'))
 uM
 
 ## ------------------------------------------------------------------------
@@ -16,7 +16,7 @@ uW = matrix(c(0.0, 1.0, 0.0,
               1.0, 0.5, 1.0), nrow = 3, ncol = 3, byrow = TRUE)
 
 ## ---- echo=FALSE---------------------------------------------------------
-dimnames(uW) = list(rows = c('Woman 1', 'Woman 2', 'Woman 3'), cols = c('Man 1', 'Man 2', 'Man 3'))
+dimnames(uW) = list(rows = c('Man 1', 'Man 2', 'Man 3'), cols = c('Woman 1', 'Woman 2', 'Woman 3'))
 uW
 
 ## ------------------------------------------------------------------------
@@ -25,7 +25,7 @@ prefM = matrix(c(1, 3, 3,
                  3, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
 
 ## ---- echo=FALSE---------------------------------------------------------
-dimnames(prefM) = list(rows = c('Man 1', 'Man 2', 'Man 3'), cols = c('Woman 1', 'Woman 2', 'Woman 3'))
+dimnames(prefM) = list(rows = c('Woman 1', 'Woman 2', 'Woman 3'), cols = c('Man 1', 'Man 2', 'Man 3'))
 prefM
 
 ## ------------------------------------------------------------------------
@@ -34,7 +34,7 @@ prefW = matrix(c(3, 1, 3,
                  1, 2, 1), nrow = 3, ncol = 3, byrow = TRUE)
 
 ## ---- echo=FALSE---------------------------------------------------------
-dimnames(prefW) = list(rows = c('Woman 1', 'Woman 2', 'Woman 3'), cols = c('Man 1', 'Man 2', 'Man 3'))
+dimnames(prefW) = list(rows = c('Man 1', 'Man 2', 'Man 3'), cols = c('Woman 1', 'Woman 2', 'Woman 3'))
 prefW
 
 ## ------------------------------------------------------------------------

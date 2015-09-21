@@ -46,14 +46,33 @@ List stableRoommateMatching(const umat pref) {
                 uword proposee = pref(proposed_to(n), n);
 
                 // proposee's preferences
-                const uword * prop_call = pref.colptr(proposee);
-
-                // proposee's opinion of the proposer (lower is better)
-                uword op = find(prop_call, prop_call + N, n) - prop_call;
-
-                // opinion of his current match
-                uword op_curr = find(prop_call, prop_call + N, proposal_from(proposee)) - prop_call;
-
+                //const uword * prop_call = pref.colptr(proposee);
+                const uvec prop_call = pref.col(proposee);
+                
+                // find proposee's opinion of the proposer (lower is better)
+                uword op = N;
+                for (uword i = 0; i < prop_call.n_elem; i++) {
+                    if (prop_call(i) == n) {
+                        op = i;
+                        break;
+                    }
+                }
+                
+                if (op == N) {
+                    stop("Invalid preference matrix: Incomplete preferences.");
+                }
+                
+                // find proposee's opinion of his current match
+                // lower is better
+                // unmmatched is N
+                uword op_curr = N;
+                for (uword i = 0; i < prop_call.n_elem; i++) {
+                    if (prop_call(i) == proposal_from(proposee)) {
+                        op_curr = i;
+                        break;
+                    }
+                }
+                
                 // if the next best guy likes him he accepts
                 if (op < op_curr) {
 
@@ -175,11 +194,11 @@ List stableRoommateMatching(const umat pref) {
     return List::create(_["matchings"] = matchings);
 }
 
-//' Check if a two-sided matching is stable
+//' Check if a matching solves the stable roommate problem
 //'
 //' This function checks if a given matching is stable for a particular set of
-//' preferences. This function can check if a given check one-to-one,
-//' one-to-many, or many-to-one matching is stable.
+//' preferences. This function checks if there's an unmatched pair that would
+//' rather be matched with each other than with their assigned partners.
 //'
 //' @param pref is a matrix with ordinal rankings of the participants
 //' @param matchings is an nx1 matrix encoding who is matched to whom using

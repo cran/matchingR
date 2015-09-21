@@ -1,10 +1,9 @@
 Package: matchingR
 Type: Package
 Title: Matching Algorithms in R and C++
-Version: 1.1
-Date: 2015-09-12
-Authors@R: c(person("Jan", "Tilly", email = "jtilly@econ.upenn.edu", rol = c("aut", "cre")),
-             person("Nick", "Janetos", email = "njanetos@econ.upenn.edu", rol = c("aut")))
+Version: 1.1.1
+Date: 2015-09-20
+Author: Jan Tilly, Nick Janetos
 Maintainer: Jan Tilly <jtilly@econ.upenn.edu>
 Description: Computes matching algorithms efficiently using Rcpp.
     Implements the Gale-Shapley Algorithm to compute the stable matching for
@@ -20,8 +19,6 @@ LinkingTo: Rcpp, RcppArmadillo
 Suggests: testthat, knitr, microbenchmark
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2015-09-14 17:14:25 UTC; jtilly
-Author: Jan Tilly [aut, cre],
-  Nick Janetos [aut]
+Packaged: 2015-09-20 23:26:57 UTC; jtilly
 Repository: CRAN
-Date/Publication: 2015-09-15 01:10:16
+Date/Publication: 2015-09-21 11:19:24
