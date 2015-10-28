@@ -97,12 +97,12 @@ Commonality = c(0.25, 0.5, 0.75)</code></pre>
 <p>The test function is constructed as follows:</p>
 <pre class="r"><code>set.seed(1)
 
-test_one2one = function(n, lambda) {
+test_galeShapley.marriageMarket = function(n, lambda) {
     uM = lambda * matrix(runif(n), nrow = n, ncol = n) +
         (1 - lambda) * runif(n ^ 2)
     uW = lambda * matrix(runif(n), nrow = n, ncol = n) +
         (1 - lambda) * runif(n ^ 2)
-    one2one(uM, uW)
+    galeShapley.marriageMarket(uM, uW)
 }</code></pre>
 <p>In this example, there are equal numbers of men and women, so everyone will get matched. Note that we are benchmarking the generation of preferences and the computation of the stable matching jointly.</p>
 <table>
@@ -118,21 +118,21 @@ test_one2one = function(n, lambda) {
 <tbody>
 <tr class="odd">
 <td align="left">N=100</td>
-<td align="right">0.001285</td>
-<td align="right">0.001303</td>
-<td align="right">0.001319</td>
+<td align="right">0.001473</td>
+<td align="right">0.001450</td>
+<td align="right">0.001469</td>
 </tr>
 <tr class="even">
 <td align="left">N=500</td>
-<td align="right">0.028648</td>
-<td align="right">0.028898</td>
-<td align="right">0.030148</td>
+<td align="right">0.032987</td>
+<td align="right">0.032858</td>
+<td align="right">0.034501</td>
 </tr>
 <tr class="odd">
 <td align="left">N=1,000</td>
-<td align="right">0.122227</td>
-<td align="right">0.123309</td>
-<td align="right">0.138565</td>
+<td align="right">0.139649</td>
+<td align="right">0.140565</td>
+<td align="right">0.147992</td>
 </tr>
 </tbody>
 </table>
@@ -142,10 +142,10 @@ test_one2one = function(n, lambda) {
 <p>In the roommate problem, existence of a stable matching is not guaranteed, and indeed for large markets, can be very likely to not exist. Therefore, there are two relevant measures of speed to be considered: First, the average time to find a stable matching or to verify that no stable matching exists, and second, the average time to find a stable matching, conditional on such a matching existing.</p>
 <p>The code to find a stable matching, from the documentation, is</p>
 <pre class="r"><code>u = matrix(rnorm(16), nrow = 4)
-results = onesided(utils = u)</code></pre>
+results = roommate(utils = u)</code></pre>
 <p>The function we use to benchmark is</p>
 <pre class="r"><code>test_roommate = function(n) {
-    onesided(utils = matrix(rnorm( 4 * n ^ 2 ), nrow = 2 * n))
+    roommate(utils = matrix(rnorm( 4 * n ^ 2 ), nrow = 2 * n))
 }</code></pre>
 <p>That is, <span class="math">\(n\)</span> represents the number of rooms available.</p>
 <table>
@@ -167,7 +167,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">47</td>
 <td align="right">0.94</td>
 <td align="right">0.961</td>
-<td align="right">0.000449</td>
+<td align="right">0.000523</td>
 </tr>
 <tr class="even">
 <td align="left">N=3</td>
@@ -175,7 +175,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">46</td>
 <td align="right">0.92</td>
 <td align="right">0.931</td>
-<td align="right">0.000639</td>
+<td align="right">0.000746</td>
 </tr>
 <tr class="odd">
 <td align="left">N=4</td>
@@ -183,7 +183,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">40</td>
 <td align="right">0.80</td>
 <td align="right">0.909</td>
-<td align="right">0.000782</td>
+<td align="right">0.000888</td>
 </tr>
 <tr class="even">
 <td align="left">N=5</td>
@@ -191,7 +191,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">41</td>
 <td align="right">0.82</td>
 <td align="right">0.868</td>
-<td align="right">0.000972</td>
+<td align="right">0.001203</td>
 </tr>
 <tr class="odd">
 <td align="left">N=6</td>
@@ -199,7 +199,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">45</td>
 <td align="right">0.90</td>
 <td align="right">0.871</td>
-<td align="right">0.001170</td>
+<td align="right">0.001366</td>
 </tr>
 <tr class="even">
 <td align="left">N=7</td>
@@ -207,7 +207,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">40</td>
 <td align="right">0.80</td>
 <td align="right">0.867</td>
-<td align="right">0.001330</td>
+<td align="right">0.001558</td>
 </tr>
 <tr class="odd">
 <td align="left">N=8</td>
@@ -215,7 +215,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">41</td>
 <td align="right">0.82</td>
 <td align="right">0.857</td>
-<td align="right">0.001585</td>
+<td align="right">0.001913</td>
 </tr>
 <tr class="even">
 <td align="left">N=9</td>
@@ -223,7 +223,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">45</td>
 <td align="right">0.90</td>
 <td align="right">0.830</td>
-<td align="right">0.001771</td>
+<td align="right">0.002000</td>
 </tr>
 <tr class="odd">
 <td align="left">N=10</td>
@@ -231,7 +231,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">38</td>
 <td align="right">0.76</td>
 <td align="right">0.815</td>
-<td align="right">0.002051</td>
+<td align="right">0.002578</td>
 </tr>
 <tr class="even">
 <td align="left">N=11</td>
@@ -239,7 +239,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">40</td>
 <td align="right">0.80</td>
 <td align="right">0.808</td>
-<td align="right">0.002276</td>
+<td align="right">0.002709</td>
 </tr>
 <tr class="odd">
 <td align="left">N=12</td>
@@ -247,7 +247,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">42</td>
 <td align="right">0.84</td>
 <td align="right">0.816</td>
-<td align="right">0.002733</td>
+<td align="right">0.003024</td>
 </tr>
 <tr class="even">
 <td align="left">N=13</td>
@@ -255,7 +255,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">41</td>
 <td align="right">0.82</td>
 <td align="right">0.788</td>
-<td align="right">0.002745</td>
+<td align="right">0.003128</td>
 </tr>
 <tr class="odd">
 <td align="left">N=14</td>
@@ -263,7 +263,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">45</td>
 <td align="right">0.90</td>
 <td align="right">0.750</td>
-<td align="right">0.003028</td>
+<td align="right">0.003529</td>
 </tr>
 <tr class="even">
 <td align="left">N=15</td>
@@ -271,7 +271,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">41</td>
 <td align="right">0.82</td>
 <td align="right">0.766</td>
-<td align="right">0.003361</td>
+<td align="right">0.003971</td>
 </tr>
 <tr class="odd">
 <td align="left">N=16</td>
@@ -279,7 +279,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">38</td>
 <td align="right">0.76</td>
 <td align="right">0.755</td>
-<td align="right">0.003620</td>
+<td align="right">0.004154</td>
 </tr>
 <tr class="even">
 <td align="left">N=17</td>
@@ -287,7 +287,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">36</td>
 <td align="right">0.72</td>
 <td align="right">0.770</td>
-<td align="right">0.003945</td>
+<td align="right">0.004489</td>
 </tr>
 <tr class="odd">
 <td align="left">N=18</td>
@@ -295,7 +295,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">36</td>
 <td align="right">0.72</td>
 <td align="right">0.740</td>
-<td align="right">0.004184</td>
+<td align="right">0.004753</td>
 </tr>
 <tr class="even">
 <td align="left">N=19</td>
@@ -303,7 +303,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">35</td>
 <td align="right">0.70</td>
 <td align="right">0.725</td>
-<td align="right">0.004525</td>
+<td align="right">0.005096</td>
 </tr>
 <tr class="odd">
 <td align="left">N=20</td>
@@ -311,7 +311,7 @@ results = onesided(utils = u)</code></pre>
 <td align="right">38</td>
 <td align="right">0.76</td>
 <td align="right">0.745</td>
-<td align="right">0.004859</td>
+<td align="right">0.005693</td>
 </tr>
 </tbody>
 </table>
@@ -337,43 +337,43 @@ results = toptrading(utils = u)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">N=2</td>
-<td align="right">0.000116</td>
+<td align="right">0.000117</td>
 </tr>
 <tr class="even">
 <td align="left">N=4</td>
-<td align="right">0.000072</td>
+<td align="right">0.000074</td>
 </tr>
 <tr class="odd">
 <td align="left">N=8</td>
-<td align="right">0.000111</td>
+<td align="right">0.000066</td>
 </tr>
 <tr class="even">
 <td align="left">N=16</td>
-<td align="right">0.000311</td>
+<td align="right">0.000154</td>
 </tr>
 <tr class="odd">
 <td align="left">N=32</td>
-<td align="right">0.000166</td>
+<td align="right">0.000171</td>
 </tr>
 <tr class="even">
 <td align="left">N=64</td>
-<td align="right">0.000464</td>
+<td align="right">0.000615</td>
 </tr>
 <tr class="odd">
 <td align="left">N=128</td>
-<td align="right">0.001754</td>
+<td align="right">0.001983</td>
 </tr>
 <tr class="even">
 <td align="left">N=256</td>
-<td align="right">0.006857</td>
+<td align="right">0.007937</td>
 </tr>
 <tr class="odd">
 <td align="left">N=512</td>
-<td align="right">0.028296</td>
+<td align="right">0.033822</td>
 </tr>
 <tr class="even">
 <td align="left">N=1,024</td>
-<td align="right">0.119512</td>
+<td align="right">0.139923</td>
 </tr>
 </tbody>
 </table>

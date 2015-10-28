@@ -7,21 +7,21 @@
 
 using namespace Rcpp;
 
-// galeShapleyMatching
-List galeShapleyMatching(const umat& proposerPref, const mat& reviewerUtils);
-RcppExport SEXP matchingR_galeShapleyMatching(SEXP proposerPrefSEXP, SEXP reviewerUtilsSEXP) {
+// cpp_wrapper_galeshapley
+List cpp_wrapper_galeshapley(const umat& proposerPref, const mat& reviewerUtils);
+RcppExport SEXP matchingR_cpp_wrapper_galeshapley(SEXP proposerPrefSEXP, SEXP reviewerUtilsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< const umat& >::type proposerPref(proposerPrefSEXP);
     Rcpp::traits::input_parameter< const mat& >::type reviewerUtils(reviewerUtilsSEXP);
-    __result = Rcpp::wrap(galeShapleyMatching(proposerPref, reviewerUtils));
+    __result = Rcpp::wrap(cpp_wrapper_galeshapley(proposerPref, reviewerUtils));
     return __result;
 END_RCPP
 }
-// checkStability
-bool checkStability(mat proposerUtils, mat reviewerUtils, umat proposals, umat engagements);
-RcppExport SEXP matchingR_checkStability(SEXP proposerUtilsSEXP, SEXP reviewerUtilsSEXP, SEXP proposalsSEXP, SEXP engagementsSEXP) {
+// cpp_wrapper_galeshapley_check_stability
+bool cpp_wrapper_galeshapley_check_stability(mat proposerUtils, mat reviewerUtils, umat proposals, umat engagements);
+RcppExport SEXP matchingR_cpp_wrapper_galeshapley_check_stability(SEXP proposerUtilsSEXP, SEXP reviewerUtilsSEXP, SEXP proposalsSEXP, SEXP engagementsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -29,53 +29,53 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< mat >::type reviewerUtils(reviewerUtilsSEXP);
     Rcpp::traits::input_parameter< umat >::type proposals(proposalsSEXP);
     Rcpp::traits::input_parameter< umat >::type engagements(engagementsSEXP);
-    __result = Rcpp::wrap(checkStability(proposerUtils, reviewerUtils, proposals, engagements));
+    __result = Rcpp::wrap(cpp_wrapper_galeshapley_check_stability(proposerUtils, reviewerUtils, proposals, engagements));
     return __result;
 END_RCPP
 }
-// stableRoommateMatching
-List stableRoommateMatching(const umat pref);
-RcppExport SEXP matchingR_stableRoommateMatching(SEXP prefSEXP) {
+// cpp_wrapper_irving
+uvec cpp_wrapper_irving(const umat pref);
+RcppExport SEXP matchingR_cpp_wrapper_irving(SEXP prefSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< const umat >::type pref(prefSEXP);
-    __result = Rcpp::wrap(stableRoommateMatching(pref));
+    __result = Rcpp::wrap(cpp_wrapper_irving(pref));
     return __result;
 END_RCPP
 }
-// checkStabilityRoommate
-bool checkStabilityRoommate(umat& pref, umat& matchings);
-RcppExport SEXP matchingR_checkStabilityRoommate(SEXP prefSEXP, SEXP matchingsSEXP) {
+// cpp_wrapper_irving_check_stability
+bool cpp_wrapper_irving_check_stability(umat& pref, umat& matchings);
+RcppExport SEXP matchingR_cpp_wrapper_irving_check_stability(SEXP prefSEXP, SEXP matchingsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< umat& >::type pref(prefSEXP);
     Rcpp::traits::input_parameter< umat& >::type matchings(matchingsSEXP);
-    __result = Rcpp::wrap(checkStabilityRoommate(pref, matchings));
+    __result = Rcpp::wrap(cpp_wrapper_irving_check_stability(pref, matchings));
     return __result;
 END_RCPP
 }
-// topTradingCycle
-List topTradingCycle(const umat pref);
-RcppExport SEXP matchingR_topTradingCycle(SEXP prefSEXP) {
+// cpp_wrapper_ttc
+uvec cpp_wrapper_ttc(const umat pref);
+RcppExport SEXP matchingR_cpp_wrapper_ttc(SEXP prefSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< const umat >::type pref(prefSEXP);
-    __result = Rcpp::wrap(topTradingCycle(pref));
+    __result = Rcpp::wrap(cpp_wrapper_ttc(pref));
     return __result;
 END_RCPP
 }
-// checkStabilityTopTradingCycle
-bool checkStabilityTopTradingCycle(umat pref, uvec matchings);
-RcppExport SEXP matchingR_checkStabilityTopTradingCycle(SEXP prefSEXP, SEXP matchingsSEXP) {
+// cpp_wrapper_ttc_check_stability
+bool cpp_wrapper_ttc_check_stability(umat pref, uvec matchings);
+RcppExport SEXP matchingR_cpp_wrapper_ttc_check_stability(SEXP prefSEXP, SEXP matchingsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< umat >::type pref(prefSEXP);
     Rcpp::traits::input_parameter< uvec >::type matchings(matchingsSEXP);
-    __result = Rcpp::wrap(checkStabilityTopTradingCycle(pref, matchings));
+    __result = Rcpp::wrap(cpp_wrapper_ttc_check_stability(pref, matchings));
     return __result;
 END_RCPP
 }

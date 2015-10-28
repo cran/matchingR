@@ -74,9 +74,9 @@ img {
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p><code>matchingR</code> is an R package that efficiently computes the <a href="http://www.jstor.org/stable/2312726">Gale-Shapley algorithm</a> <span class="citation">(Gale and Shapley 1962)</span>, <a href="http://www.sciencedirect.com/science/article/pii/0196677485900331">Irving’s algorithm for the stable roommate problem</a> <span class="citation">(Irving 1985)</span>, and the <a href="http://pareto.uab.es/jmasso/pdf/ShapleyScarfJME1974.pdf">top trading cycle algorithm</a> <span class="citation">(Shapley and Scarf 1973)</span> for large matching markets. The package provides functions to compute the solutions to the <a href="http://en.wikipedia.org/wiki/Stable_matching">stable marriage problem</a>, to the <a href="http://en.wikipedia.org/wiki/Hospital_resident">college admission problem</a>, the <a href="http://en.wikipedia.org/wiki/Stable_roommates_problem">stable roommates problem</a>, and the <a href="http://web.stanford.edu/~niederle/HouseAllocation.pdf">house allocation problem</a>.</p>
-<p>The package can be useful when the number of market participants is large or when very many matchings need to be computed (e.g. for extensive simulations or for estimation purposes). The Gale-Shapley function of this package has successfully been used to simulate preferences and compute the matching with 30,000 participants on each side of the market.</p>
-<p>Matching markets are very common in practice and widely studied by economists. Popular examples include</p>
+<p><code>matchingR</code> is an R package that efficiently computes the <a href="http://www.jstor.org/stable/2312726">Gale-Shapley algorithm</a> <span class="citation">(Gale and Shapley 1962)</span>, <a href="http://www.sciencedirect.com/science/article/pii/0196677485900331">Irving’s algorithm for the stable roommate problem</a> <span class="citation">(Irving 1985)</span>, and the <a href="http://pareto.uab.es/jmasso/pdf/ShapleyScarfJME1974.pdf">top trading cycle algorithm</a> <span class="citation">(Shapley and Scarf 1973)</span> for large matching markets. The package provides functions to compute the solutions to the <a href="http://en.wikipedia.org/wiki/Stable_matching">stable marriage problem</a>, the <a href="http://en.wikipedia.org/wiki/Hospital_resident">college admission problem</a>, the <a href="http://en.wikipedia.org/wiki/Stable_roommates_problem">stable roommates problem</a>, and the <a href="http://web.stanford.edu/~niederle/HouseAllocation.pdf">house allocation problem</a>.</p>
+<p>The package may be useful when the number of market participants is large or when many matchings need to be computed (e.g., for simulation or estimation purposes). It has been used in practice to compute the Gale-Shapley stable matching with 30,000 participants on each side of the market.</p>
+<p>Matching markets are common in practice and widely studied by economists. Popular examples include</p>
 <ul>
 <li>the <a href="http://www.nrmp.org/">National Resident Matching Program</a> that matches graduates from medical school to residency programs at teaching hospitals throughout the United States</li>
 <li>the matching of students to schools including the <a href="http://www.jstor.org/stable/4132848">New York City High School Match</a> or the the <a href="http://www.jstor.org/stable/4132849">Boston Public School Match</a> (and many more)</li>
@@ -85,8 +85,9 @@ img {
 </div>
 <div id="two-sided-matching-markets-gale-shapley-algorithm" class="section level1">
 <h1>Two-sided Matching Markets: Gale-Shapley Algorithm</h1>
-<p>Consider the following example of the marriage market. Suppose there are <code>N</code> men and <code>N</code> women. A matching assigns men to women such that each man is assigned to exactly one woman and each woman is assigned to exactly one man. A matching is <strong>stable</strong> if there is no man <code>m</code> that would rather be matched to some other woman <code>w'</code> than to his current spouse <code>w</code> and this other woman <code>w'</code> would rather be matched to man <code>m</code> than to her current spouse <code>m'</code>. In other words, a matching is stable when there does not exist a pair <code>(m, w')</code> for which both <code>m</code> and <code>w'</code> are better off than they are with their respective spouses <code>w</code> and <code>m'</code>.</p>
-<p>We first need to introduce notation to specify men’s and women’s preferences. Men’s payoffs from being matched are given by the payoff matrix <code>uM</code>. Columns in the matrix correspond to men, rows to women. For example:</p>
+<p>Consider the following marriage market: There are <code>N</code> men and <code>N</code> women. Each man, <code>m</code>, receives utility <code>uM(w, m)</code> from a match with woman <code>w</code>, and similarly each woman receives a payoff of <code>uW(m, w)</code> from being matched with a man.</p>
+<p>A matching assigns men to women such that each man is assigned to one woman and each woman is assigned to one man. A matching is <strong>stable</strong> if there is no man and woman who would jointly prefer to be matched to each other over their current spouses. In other words, a matching is stable if there are no pairs <code>(m, w'), (m', w)</code>, such that <code>m</code> is matched with <code>w'</code>, <code>m'</code> is matched with <code>w</code>, and both <code>uW(m, w) &gt; uW(m', w)</code> and <code>uM(m, w) &gt; uM(m, w')</code>.</p>
+<p>For example, we might have preferences for men given by</p>
 <pre class="r"><code>uM = matrix(c(1.0, 0.5, 0.0,
               0.5, 0.0, 0.5,
               0.0, 1.0, 1.0), nrow = 3, ncol = 3, byrow = TRUE)</code></pre>
@@ -95,7 +96,7 @@ img {
 ##   Woman 1   1.0   0.5   0.0
 ##   Woman 2   0.5   0.0   0.5
 ##   Woman 3   0.0   1.0   1.0</code></pre>
-<p>In this example, man <code>1</code> receives a payoff of <code>1.0</code> from being matched to woman <code>1</code>, a payoff of <code>0.5</code> from being matched to woman <code>2</code> and a payoff of <code>0.0</code> from being matched to woman 3 (same logic applies to men <code>2</code> and <code>3</code>). Similarly, let the payoff matrix for women be given by</p>
+<p>In this example, man <code>1</code> receives a payoff of <code>1.0</code> from being matched to woman <code>1</code>, a payoff of <code>0.5</code> from being matched to woman <code>2</code> and a payoff of <code>0.0</code> from being matched to woman 3 (same logic applies to men <code>2</code> and <code>3</code>). Similarly, we might have preferences for women given by</p>
 <pre class="r"><code>uW = matrix(c(0.0, 1.0, 0.0,
               0.5, 0.0, 0.5,
               1.0, 0.5, 1.0), nrow = 3, ncol = 3, byrow = TRUE)</code></pre>
@@ -124,7 +125,7 @@ img {
 ##   Man 2       2       3       2
 ##   Man 3       1       2       1</code></pre>
 <p>The matching algorithm discussed below can take either payoff matrices of the type <code>uM</code> and <code>uW</code> or preference orderings of the type <code>prefM</code> and <code>prefW</code> as arguments.</p>
-<p>The Gale-Shapley algorithm works as follows: Single men (“the proposers”) sequentially make proposals to each of their most preferred available women (“the reviewers”). A woman can hold on to at most one proposal at a time. A <em>single</em> woman will accept any proposal that is made to her. A woman that already holds on to a proposal will reject any proposal by a man that she values less than her current match. If a woman receives a proposal from a man that she values more than her current match, then she will accept the proposal and her previous match will join the line of bachelors. This process continues until all men are matched to women.</p>
+<p>The Gale-Shapley algorithm works as follows: Single men (“the proposers”) sequentially make proposals to each of their most preferred available women (“the reviewers”). A woman can hold on to at most one proposal at a time. A <em>single</em> woman will accept any proposal that is made to her. A woman who already has a proposal will reject any proposal she values less than her current proposal in hand. If a woman receives a proposal from a man that she values more than her current proposal, she will accept the proposal and her previous match will rejoin the line of proposers. This process continues until all men are matched to all women.</p>
 <p>For the preferences specified in <code>uM</code> and <code>uW</code>, we can compute the Gale-Shapley Algorithm by hand. Initially, all men are single.</p>
 <ol style="list-style-type: decimal">
 <li><ul>
@@ -173,11 +174,11 @@ img {
 </tr>
 </tbody>
 </table>
-<p>The package computes the Gale-Shapley algorithm using the function <code>one2one</code>:</p>
-<pre class="r"><code>matching = one2one(uM, uW)</code></pre>
+<p>The package computes the Gale-Shapley algorithm using the function <code>galeShapley.marriageMarket</code>:</p>
+<pre class="r"><code>matching = galeShapley.marriageMarket(uM, uW)</code></pre>
 <p>Note that we can obtain equivalent results when we use <code>prefM</code> and <code>prefW</code> as arguments:</p>
-<pre class="r"><code>matching = one2one(proposerPref = prefM, reviewerPref = prefW)</code></pre>
-<p>The function <code>one2one</code> returns a list <code>matching</code> that includes the vectors <code>proposals</code> and <code>engagements</code> with the final proposals and engagements, respectively. These two vectors contain the same information (i.e. they tell us who is matched with whom). For the example above, the vector of proposals contains</p>
+<pre class="r"><code>matching = galeShapley.marriageMarket(proposerPref = prefM, reviewerPref = prefW)</code></pre>
+<p>The function <code>galeShapley.marriageMarket</code> returns a list <code>matching</code> that includes the vectors <code>proposals</code> and <code>engagements</code> with the final proposals and engagements, respectively. These two vectors contain the same information (i.e. they tell us who is matched with whom). For the example above, the vector of proposals contains</p>
 <pre class="r"><code>matching$proposals</code></pre>
 <pre><code>##        cols
 ## rows    Proposed to Woman
@@ -193,7 +194,8 @@ img {
 ##   Woman 3              3</code></pre>
 <p>The first element in the vector tells us that woman <code>1</code> is matched to man <code>2</code>, woman <code>2</code> will be matched to man <code>1</code>, and woman <code>3</code> will be matched to man <code>3</code>.</p>
 <p>We can then check if the computed matching is stable using the function <code>checkStability</code>. To check if a matching is stable, we check for each assignment <code>(m,w)</code> if there is some other woman <code>w'</code> that man <code>m</code> would rather be matched with and who would rather be matched to man <code>m</code>. This function will return <code>true</code> if the matching is stable and <code>false</code> otherwise.</p>
-<pre class="r"><code>checkStability(uM, uW, matching$proposals, matching$engagements)</code></pre>
+<pre class="r"><code>galeShapley.checkStability(uM, uW, matching$proposals, matching$engagements)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <p>For the simple 3-by-3 example, we can perform this check by hand:</p>
 <ul>
 <li>Man <code>1</code> is matched to woman <code>2</code>, his second-most preferred choice. His most preferred choice is woman <code>1</code>. Woman <code>1</code> is matched with man <code>2</code> who she prefers over man <code>1</code>. Thus man <code>1</code> cannot do better than woman <code>2</code>.</li>
@@ -204,7 +206,7 @@ img {
 <p>The following examples illustrate some additional features of this package.</p>
 <div id="example-marriage-market" class="section level3">
 <h3>Example: Marriage Market</h3>
-<p>The following is an example of <code>one2one</code> with different numbers of participants on each side of the market. There are 2,500 women and 2,000 men. By construction, 500 men will remain unmatched. We randomly generate payoff matrices <code>uM</code> and <code>uW</code> which are drawn from a uniform distribution (<code>runif</code>). We then compute the male-optimal (i.e. men are proposing) and the female-optimal (i.e. woman are proposing) matching.</p>
+<p>The following is an example of <code>galeShapley.marriageMarket</code> with different numbers of participants on each side of the market. There are 2,500 women and 2,000 men. By construction, 500 men will remain unmatched. We randomly generate payoff matrices <code>uM</code> and <code>uW</code> which are drawn from a uniform distribution (<code>runif</code>). We then compute the male-optimal (i.e. men are proposing) and the female-optimal (i.e. woman are proposing) matching.</p>
 <pre class="r"><code># set seed
 set.seed(1)
 # set number of men
@@ -214,17 +216,30 @@ nwomen = 2000
 # generate preferences
 uM = matrix(runif(nmen*nwomen), nrow = nwomen, ncol = nmen)
 uW = matrix(runif(nmen*nwomen), nrow = nmen, ncol = nwomen)
-# male optimal matching
-resultsM = one2one(uM, uW)
-# female optimal matching
-resultsW = one2one(uW, uM)
-# check if matchings are stable
-checkStability(uM, uW, resultsM$proposals, resultsM$engagements)
-checkStability(uW, uM, resultsW$proposals, resultsW$engagements)</code></pre>
+# male-optimal matching
+resultsM = galeShapley.marriageMarket(uM, uW)
+str(resultsM)</code></pre>
+<pre><code>## List of 4
+##  $ proposals       : num [1:2500, 1] 927 1644 1965 1851 349 ...
+##  $ engagements     : num [1:2000, 1] 386 471 1582 598 1657 ...
+##  $ single.proposers: num [1:500] 8 11 17 19 26 30 34 37 49 53 ...
+##  $ single.reviewers: num(0)</code></pre>
+<pre class="r"><code>galeShapley.checkStability(uM, uW, resultsM$proposals, resultsM$engagements)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># female-optimal matching
+resultsW = galeShapley.marriageMarket(uW, uM)
+str(resultsW)</code></pre>
+<pre><code>## List of 4
+##  $ proposals       : num [1:2000, 1] 386 471 1582 598 1657 ...
+##  $ engagements     : num [1:2500, 1] 927 1644 1965 1851 349 ...
+##  $ single.proposers: num(0) 
+##  $ single.reviewers: num [1:500] 8 11 17 19 26 30 34 37 49 53 ...</code></pre>
+<pre class="r"><code>galeShapley.checkStability(uW, uM, resultsW$proposals, resultsW$engagements)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="example-college-admissions-problem" class="section level3">
 <h3>Example: College Admissions Problem</h3>
-<p>The following is an example of <code>one2many</code> where 1000 students get matched to 400 colleges, where each college has two slots. By construction, 200 students will remain unmatched. We draw students’ and colleges’ preferences, <code>uStudents</code> and <code>uColleges</code>, respectively, by from a uniform distribution.</p>
+<p>The following is an example of <code>galeShapley.collegeAdmissions</code> where 1000 students get matched to 400 colleges, where each college has two slots. By construction, 200 students will remain unmatched. We draw students’ and colleges’ preferences, <code>uStudents</code> and <code>uColleges</code>, respectively, by from a uniform distribution.</p>
 <pre class="r"><code># set seed
 set.seed(1)
 # set number of students
@@ -234,23 +249,38 @@ ncolleges = 400
 # generate preferences
 uStudents = matrix(runif(ncolleges*nstudents), nrow = ncolleges, ncol = nstudents)
 uColleges = matrix(runif(nstudents*ncolleges), nrow = nstudents, ncol = ncolleges)
-# worker optimal matching
-results = one2many(uStudents, uColleges, slots = 2)
-# check if matching is stable
-checkStability(uStudents, uColleges, results$proposals, results$engagements)</code></pre>
+# student-optimal matching
+results = galeShapley.collegeAdmissions(studentUtils =  uStudents, collegeUtils =  uColleges, slots = 2)
+str(results)</code></pre>
+<pre><code>## List of 4
+##  $ unmatched.students: num [1:200] 3 15 23 29 30 36 44 46 48 49 ...
+##  $ unmatched.colleges: num(0) 
+##  $ matched.colleges  : num [1:400, 1:2] 728 887 28 372 875 775 456 937 402 774 ...
+##  $ matched.students  : num [1:1000, 1] 52 70 NA 210 155 170 238 16 371 391 ...</code></pre>
+<pre class="r"><code># check if matching is stable
+galeShapley.checkStability(uStudents, uColleges, results$matched.students, results$matched.colleges)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 </div>
 </div>
 <div id="one-sided-matching-markets-irvings-algorithm" class="section level1">
 <h1>One-sided Matching Markets: Irving’s Algorithm</h1>
 <p>This package implements the algorithm by <span class="citation">Irving (1985)</span> for one-sided matching markets.</p>
-<p>Consider the following example: A set of <span class="math">\(n\)</span> potential roommates, each with ranked preferences over all the other potential roommates, are to be matched to rooms, two roommates per room. A matching is <strong>stable</strong> if there is no roommate <code>r1</code> that would rather be matched to some other roommate <code>d2</code> than to his current roommate <code>r2</code> and the other roommate <code>d2</code> would rather be matched to <code>r1</code> than to his current roommate <code>d1</code>.</p>
+<p>Consider the following example: A set of <code>n</code> potential roommates, each with ranked preferences over all the other potential roommates, are to be matched to rooms, two roommates per room. A matching is <strong>stable</strong> if there is no roommate <code>r1</code> that would rather be matched to some other roommate <code>d2</code> than to his current roommate <code>r2</code> and the other roommate <code>d2</code> would rather be matched to <code>r1</code> than to his current roommate <code>d1</code>.</p>
 <p>Preferences of potential roommates are summarized by an <span class="math">\(n-1 \times n\)</span> dimensional matrix, e.g., if <span class="math">\(n = 6\)</span>,</p>
 <pre class="r"><code>pref = matrix(c(3, 6, 2, 5, 3, 5,
                 4, 5, 4, 2, 1, 1,
                 2, 4, 5, 3, 2, 3,
                 6, 1, 1, 6, 4, 4,
                 5, 3, 6, 1, 6, 2), nrow = 5, ncol = 6, byrow = TRUE)</code></pre>
-<p>Column <span class="math">\(i\)</span> represents the preferences of the <span class="math">\(i\)</span>th roommate, and row <span class="math">\(j\)</span> represents the ranking of the roommate whose index is encoded in that row. For example, in the above preference matrix, roommate <code>1</code> most prefers to be matched with roommate <code>3</code>, followed by <code>4</code>, followed by <code>2</code>.</p>
+<p>Column <code>i</code> represents the preferences of the <code>i</code>th roommate, and row <code>j</code> represents the ranking of the roommate whose index is encoded in that row. For example, in the above preference matrix, roommate <code>1</code> most prefers to be matched with roommate <code>3</code>, followed by <code>4</code>, followed by <code>2</code>.</p>
+<p>The function <code>roommate.checkPreferences</code> checks if a given preference order is complete, i.e. if all preferences are fully specified. If the preference order is complete, it will return the proper preference order using <code>C++</code> style indexing (beginning at <code>0</code> instead of at <code>1</code>). If the preference order is incomplete, the function will return an error.</p>
+<pre class="r"><code>roommate.checkPreferences(pref)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6]
+## [1,]    2    5    1    4    2    4
+## [2,]    3    4    3    1    0    0
+## [3,]    1    3    4    2    1    2
+## [4,]    5    0    0    5    3    3
+## [5,]    4    2    5    0    5    1</code></pre>
 <p>The algorithm proceeds in two phases.</p>
 <p>In phase 1, potential roommates take turns sequentially proposing to the other roommates. Each roommate who is proposed to can accept or reject the proposal. A roommate accepts if he currently has made no better proposal which was accepted to another roommate. If a roommate has accepted a proposal, and then receives a better proposal, he rejects the old proposal and substitutes in the new proposal.</p>
 <p>In the above example,</p>
@@ -290,7 +320,7 @@ checkStability(uStudents, uColleges, results$proposals, results$engagements)</co
 6,
 </code></pre>
 <p>Therefore, a stable matching is for <code>1</code> and <code>6</code> to match, <code>2</code> and <code>4</code> to match, and <code>3</code> and <code>5</code> to match.</p>
-<pre class="r"><code>results = onesided(pref = pref - 1)
+<pre class="r"><code>results = roommate(pref = pref)
 results</code></pre>
 <pre><code>##      [,1]
 ## [1,]    6
@@ -299,13 +329,16 @@ results</code></pre>
 ## [4,]    2
 ## [5,]    3
 ## [6,]    1</code></pre>
+<p>The function <code>roommate.checkStability</code> can be used to check if the resulting matching is stable:</p>
+<pre class="r"><code>roommate.checkStability(pref = pref, matching = results)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <div id="example-roommate-problem" class="section level3">
 <h3>Example: Roommate problem</h3>
-<p>The function <code>onesided</code> can also be called using a payoff matrix, <code>u</code>, to specify preferences. In <code>u</code>, the element <code>[i,j]</code> refers to the payoff that agent <code>j</code> gets from being matched to agent <code>i</code>. The main diagonal of this matrix contains no information and will be removed by the algorithm.</p>
+<p>The function <code>roommate</code> can also be called using a payoff matrix, <code>u</code>, to specify preferences. In <code>u</code>, the element <code>[i,j]</code> refers to the payoff that agent <code>j</code> gets from being matched to agent <code>i</code>. The main diagonal of this matrix contains no information and will be removed by the algorithm.</p>
 <pre class="r"><code># generate preferences
 N = 10
 u = matrix(runif(N^2),  nrow = N, ncol = N)
-results = onesided(utils = u)
+results = roommate(utils = u)
 results</code></pre>
 <pre><code>##       [,1]
 ##  [1,]    3
@@ -318,14 +351,16 @@ results</code></pre>
 ##  [8,]    9
 ##  [9,]    8
 ## [10,]    6</code></pre>
+<pre class="r"><code>roommate.checkStability(utils = u, matching = results)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="example-roommate-problem-when-no-stable-matching-exists" class="section level3">
 <h3>Example: Roommate problem when no stable matching exists</h3>
-<p>Note that in the roommate problem, existence of a stable matching is not guaranteed. When no stable matching can be found, the function <code>onesided</code> returns <code>NULL</code>.</p>
+<p>Note that in the roommate problem, existence of a stable matching is not guaranteed. When no stable matching can be found, the function <code>roommate</code> returns <code>NULL</code>.</p>
 <pre class="r"><code>set.seed(1)
 N = 512
 u = matrix(runif(N^2),  nrow = N, ncol = N)
-results = onesided(utils = u)
+results = roommate(utils = u)
 print(results)</code></pre>
 <pre><code>## NULL</code></pre>
 </div>
@@ -340,12 +375,12 @@ print(results)</code></pre>
                 1, 2, 3, 3,
                 3, 3, 4, 2), nrow = 4, ncol = 4, byrow = TRUE)</code></pre>
 <p>Column <span class="math">\(i\)</span> represents the preferences of the <span class="math">\(i\)</span>th agent, and row <span class="math">\(j\)</span> represents the ranking of the roommate whose index is encoded in that row. For example, in the above preference matrix, agent <code>1</code> most prefers the home of agent <code>4</code>, followed by <code>2</code>, followed by <code>1</code>, followed by <code>3</code>.</p>
-<p>Roughly speaking, the top trading cycle proceeds by identifying cycles of agents, then eliminating those cycles until no agents remain. A cycle is a sequence of agents such that each agent most prefers the next agent’s home (out of the remaining unmmatched agents), and the last agent in the sequence most prefers the first agent in the sequence’s home.</p>
+<p>Roughly speaking, the top trading cycle proceeds by identifying cycles of agents, then eliminating those cycles until no agents remain. A cycle is a sequence of agents such that each agent most prefers the next agent’s home (out of the remaining unmatched agents), and the last agent in the sequence most prefers the first agent in the sequence’s home.</p>
 <pre><code>4,  4,  2,  4
 2,  1,  1,  1
 1,  2,  3,  3
 3,  3,  4,  2</code></pre>
-<p>For example, for the above preference matrix, when all the agents are unmmatched, the only rotation is <span class="math">\(\{4\}\)</span>, representing the fact that agent <code>4</code> most prefers his own house. Therefore, the algorithm begins by matching agent <code>4</code> to himself, and then removing him from the pool:</p>
+<p>For example, for the above preference matrix, when all the agents are unmatched, the only rotation is <span class="math">\(\{4\}\)</span>, representing the fact that agent <code>4</code> most prefers his own house. Therefore, the algorithm begins by matching agent <code>4</code> to himself, and then removing him from the pool:</p>
 <pre><code>        2
 2,  1,  1
 1,  2,  3
@@ -356,11 +391,21 @@ print(results)</code></pre>
         3
 </code></pre>
 <p>Therefore, the final matching is that agent <code>1</code> swaps with agent <code>2</code>, and agents <code>3</code> and <code>4</code> keep their own homes.</p>
+<pre class="r"><code>results = toptrading(pref = pref)
+results</code></pre>
+<pre><code>##      [,1]
+## [1,]    2
+## [2,]    1
+## [3,]    3
+## [4,]    4</code></pre>
+<p>The function <code>toptrading.checkStability</code> can be used to check if the resulting allocation is in fact stable:</p>
+<pre class="r"><code>toptrading.checkStability(pref = pref, matchings = results)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <div class="references">
 <h1>Literature</h1>
 <p>Gale, D., and L. Shapley. 1962. “College Admissions and the Stability of Marriage.” <em>American Mathematical Monthly</em> 69 (1): 9–15.</p>
 <p>Irving, R. 1985. “An Efficient Algorithm for the ‘Stable Roommates’ Problem.” <em>Journal of Algorithms</em> 6 (4): 577–595.</p>
-<p>Shapley, L., and H. Scarf. 1973. “On Cores and Indivisibility.” <em>Journal of Mathermatical Economics</em> 1 (1): 23–37.</p>
+<p>Shapley, L., and H. Scarf. 1973. “On Cores and Indivisibility.” <em>Journal of Mathematical Economics</em> 1 (1): 23–37.</p>
 </div>
 </div>
 

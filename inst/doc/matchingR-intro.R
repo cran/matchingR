@@ -38,10 +38,10 @@ dimnames(prefW) = list(rows = c('Man 1', 'Man 2', 'Man 3'), cols = c('Woman 1', 
 prefW
 
 ## ------------------------------------------------------------------------
-matching = one2one(uM, uW)
+matching = galeShapley.marriageMarket(uM, uW)
 
 ## ------------------------------------------------------------------------
-matching = one2one(proposerPref = prefM, reviewerPref = prefW)
+matching = galeShapley.marriageMarket(proposerPref = prefM, reviewerPref = prefW)
 
 ## ---- echo=FALSE---------------------------------------------------------
 dimnames(matching$proposals) = list(rows = c("Man 1", "Man 2", "Man 3"),
@@ -57,10 +57,10 @@ dimnames(matching$engagements) = list(rows = c("Woman 1", "Woman 2", "Woman 3"),
 ## ------------------------------------------------------------------------
 matching$engagements
 
-## ---- results = "hide", message=FALSE------------------------------------
-checkStability(uM, uW, matching$proposals, matching$engagements)
+## ------------------------------------------------------------------------
+galeShapley.checkStability(uM, uW, matching$proposals, matching$engagements)
 
-## ---- results = "hide"---------------------------------------------------
+## ------------------------------------------------------------------------
 # set seed
 set.seed(1)
 # set number of men
@@ -70,15 +70,16 @@ nwomen = 2000
 # generate preferences
 uM = matrix(runif(nmen*nwomen), nrow = nwomen, ncol = nmen)
 uW = matrix(runif(nmen*nwomen), nrow = nmen, ncol = nwomen)
-# male optimal matching
-resultsM = one2one(uM, uW)
-# female optimal matching
-resultsW = one2one(uW, uM)
-# check if matchings are stable
-checkStability(uM, uW, resultsM$proposals, resultsM$engagements)
-checkStability(uW, uM, resultsW$proposals, resultsW$engagements)
+# male-optimal matching
+resultsM = galeShapley.marriageMarket(uM, uW)
+str(resultsM)
+galeShapley.checkStability(uM, uW, resultsM$proposals, resultsM$engagements)
+# female-optimal matching
+resultsW = galeShapley.marriageMarket(uW, uM)
+str(resultsW)
+galeShapley.checkStability(uW, uM, resultsW$proposals, resultsW$engagements)
 
-## ---- results = "hide"---------------------------------------------------
+## ------------------------------------------------------------------------
 # set seed
 set.seed(1)
 # set number of students
@@ -88,10 +89,11 @@ ncolleges = 400
 # generate preferences
 uStudents = matrix(runif(ncolleges*nstudents), nrow = ncolleges, ncol = nstudents)
 uColleges = matrix(runif(nstudents*ncolleges), nrow = nstudents, ncol = ncolleges)
-# worker optimal matching
-results = one2many(uStudents, uColleges, slots = 2)
+# student-optimal matching
+results = galeShapley.collegeAdmissions(studentUtils =  uStudents, collegeUtils =  uColleges, slots = 2)
+str(results)
 # check if matching is stable
-checkStability(uStudents, uColleges, results$proposals, results$engagements)
+galeShapley.checkStability(uStudents, uColleges, results$matched.students, results$matched.colleges)
 
 ## ------------------------------------------------------------------------
 pref = matrix(c(3, 6, 2, 5, 3, 5,
@@ -101,21 +103,28 @@ pref = matrix(c(3, 6, 2, 5, 3, 5,
                 5, 3, 6, 1, 6, 2), nrow = 5, ncol = 6, byrow = TRUE)
 
 ## ------------------------------------------------------------------------
-results = onesided(pref = pref - 1)
+roommate.checkPreferences(pref)
+
+## ------------------------------------------------------------------------
+results = roommate(pref = pref)
 results
+
+## ------------------------------------------------------------------------
+roommate.checkStability(pref = pref, matching = results)
 
 ## ------------------------------------------------------------------------
 # generate preferences
 N = 10
 u = matrix(runif(N^2),  nrow = N, ncol = N)
-results = onesided(utils = u)
+results = roommate(utils = u)
 results
+roommate.checkStability(utils = u, matching = results)
 
 ## ------------------------------------------------------------------------
 set.seed(1)
 N = 512
 u = matrix(runif(N^2),  nrow = N, ncol = N)
-results = onesided(utils = u)
+results = roommate(utils = u)
 print(results)
 
 ## ------------------------------------------------------------------------
@@ -123,4 +132,11 @@ pref = matrix(c(4, 4, 2, 4,
                 2, 1, 1, 1,
                 1, 2, 3, 3,
                 3, 3, 4, 2), nrow = 4, ncol = 4, byrow = TRUE)
+
+## ------------------------------------------------------------------------
+results = toptrading(pref = pref)
+results
+
+## ------------------------------------------------------------------------
+toptrading.checkStability(pref = pref, matchings = results)
 

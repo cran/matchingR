@@ -1,3 +1,12 @@
+# matchingR 1.2
+
+ * Fixed a bug in the stable roommate matching algorithm that caused
+   problems on Mac OS X / clang
+ * Changed function names throughout the package (deprecated old function names)
+ * Updated documentation
+ * Added tests
+ * Removed option to define preferences in row major order
+
 # matchingR 1.1.1
 
 This is a minor update. 

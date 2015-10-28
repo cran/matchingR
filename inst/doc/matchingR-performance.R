@@ -26,29 +26,29 @@ Commonality = c(0.25, 0.5, 0.75)
 ## ------------------------------------------------------------------------
 set.seed(1)
 
-test_one2one = function(n, lambda) {
+test_galeShapley.marriageMarket = function(n, lambda) {
     uM = lambda * matrix(runif(n), nrow = n, ncol = n) +
         (1 - lambda) * runif(n ^ 2)
     uW = lambda * matrix(runif(n), nrow = n, ncol = n) +
         (1 - lambda) * runif(n ^ 2)
-    one2one(uM, uW)
+    galeShapley.marriageMarket(uM, uW)
 }
 
 ## ---- echo=FALSE---------------------------------------------------------
 res1 = microbenchmark::microbenchmark(
-    test_one2one(N[1], Commonality[1]),
-    test_one2one(N[2], Commonality[1]),
-    test_one2one(N[3], Commonality[1]), times = 1, unit = "s")
+    test_galeShapley.marriageMarket(N[1], Commonality[1]),
+    test_galeShapley.marriageMarket(N[2], Commonality[1]),
+    test_galeShapley.marriageMarket(N[3], Commonality[1]), times = 1, unit = "s")
 
 res2 = microbenchmark::microbenchmark(
-    test_one2one(N[1], Commonality[2]),
-    test_one2one(N[2], Commonality[2]),
-    test_one2one(N[3], Commonality[2]), times = 1, unit = "s")
+    test_galeShapley.marriageMarket(N[1], Commonality[2]),
+    test_galeShapley.marriageMarket(N[2], Commonality[2]),
+    test_galeShapley.marriageMarket(N[3], Commonality[2]), times = 1, unit = "s")
 
 res3 = microbenchmark::microbenchmark(
-    test_one2one(N[1], Commonality[3]),
-    test_one2one(N[2], Commonality[3]),
-    test_one2one(N[3], Commonality[3]), times = 1, unit = "s")
+    test_galeShapley.marriageMarket(N[1], Commonality[3]),
+    test_galeShapley.marriageMarket(N[2], Commonality[3]),
+    test_galeShapley.marriageMarket(N[3], Commonality[3]), times = 1, unit = "s")
 
 ## ---- echo=FALSE---------------------------------------------------------
 table = matrix(c(summary(res1, unit = 's')$mean,
@@ -60,11 +60,11 @@ knitr::kable(table, digits = 6, caption = "Run time (in seconds) for the matchin
 
 ## ------------------------------------------------------------------------
 u = matrix(rnorm(16), nrow = 4)
-results = onesided(utils = u)
+results = roommate(utils = u)
 
 ## ------------------------------------------------------------------------
 test_roommate = function(n) {
-    onesided(utils = matrix(rnorm( 4 * n ^ 2 ), nrow = 2 * n))
+    roommate(utils = matrix(rnorm( 4 * n ^ 2 ), nrow = 2 * n))
 }
 
 ## ---- echo=FALSE---------------------------------------------------------
@@ -96,7 +96,7 @@ res_irving = microbenchmark::microbenchmark(
 solution_exists = rep(0, 19);
 for (n in 1:19) {
     for (i in 1:50) {
-        results = onesided(utils = matrix(rnorm( 4 * N[n] ^ 2 ), nrow = 2 * N[n]))
+        results = roommate(utils = matrix(rnorm( 4 * N[n] ^ 2 ), nrow = 2 * N[n]))
         if (!is.null(results)) {
             solution_exists[n] = solution_exists[n] + 1;
         }

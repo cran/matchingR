@@ -1,31 +1,55 @@
-# matchingR.R
+#  matchingR -- Matching Algorithms in R and C++
+#
+#  Copyright (C) 2015  Jan Tilly <jtilly@econ.upenn.edu>
+#                      Nick Janetos <njanetos@econ.upenn.edu>
+#
+#  This file is part of matchingR.
+#
+#  matchingR is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  matchingR is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 
 #' @name matchingR-package
 #' @docType package
 #' @title matchingR: Efficient Computation of Matching Algorithms in R
 #'   and C++
-#' @description matchingR is an R package that efficiently computes the
-#'   Gale-Shapley algorithm for both the stable marriage problem and the college
-#'   admissions problem, Irving's algorithm for the stable roommate problem, and
-#'   the top trading cycle algorithm for large matching markets. The package
-#'   provides functions to compute the solutions to the stable marriage problem,
-#'   to the college admission problem, the stable roommates problem, and the
-#'   house allocation problem.
+#' @description matchingR is an R package which quickly computes a variety of
+#'   matching algorithms for one-sided and two-sided markets. This package
+#'   implements
+#'   \itemize{
+#'   \item{the Gale-Shapley Algorithm to compute the stable matching for
+#'   two-sided markets, such as the stable marriage problem and the
+#'   college-admissions problem}
+#'   \item{Irving's Algorithm to compute the stable matching for one-sided
+#'   markets such as the stable roommates problem}
+#'   \item{the top trading cycle algorithm for the indivisible goods trading
+#'   problem.}
+#'   }
 #'
-#'   The package can be useful when the number of market participants is large
-#'   or when very many matchings need to be computed (e.g. for extensive
-#'   simulations or for estimation purposes). The Gale-Shapley function of this
-#'   package has successfully been used to simulate preferences and compute the
-#'   matching with 30,000 participants on each side of the market.
-#'
-#'   Matching markets are very common in practice and widely studied by
+#'   All matching algorithms are implemented in \code{C++} and can therefore be 
+#'   computed quickly. The package may be useful when the number of market 
+#'   participants is large or when many matchings need to be computed (e.g. for
+#'   extensive simulations or for estimation purposes). The Gale-Shapley 
+#'   function of this package has successfully been used to simulate preferences
+#'   and compute the matching with 30,000 participants on each side of the 
+#'   market.
+#'   
+#'   Matching markets are common in practice and widely studied by
 #'   economists. Popular examples include
-#'
-#'   the National Resident Matching Program that matches graduates from medical
-#'   school to residency programs at teaching hospitals throughout the United
-#'   States the matching of students to schools including the New York City High
-#'   School Match or the the Boston Public School Match (and many more) the
-#'   matching of kidney donors to recipients in kidney exchanges.
+#'   \itemize{
+#'   \item{the National Resident Matching Program that matches graduates from
+#'   medical school to residency programs at teaching hospitals throughout the
+#'   United States}
+#'   \item{the matching of students to schools including the New York City High
+#'   School Match or the the Boston Public School Match (and many more)}
+#'   \item{the matching of kidney donors to recipients in kidney exchanges.}
+#'   }
 #' @author Jan Tilly, Nick Janetos
 #' @references Gale, D. and Shapley, L.S. (1962). College admissions and the
 #'   stability of marriage. \emph{The American Mathematical Monthly}, 69(1):
@@ -36,72 +60,43 @@
 #'   \emph{Journal of Mathematical Economics}, 1(1), 23-37.
 #' @examples
 #' # stable marriage problem
+#' set.seed(1)
 #' nmen = 25
 #' nwomen = 20
 #' uM = matrix(runif(nmen*nwomen), nrow=nwomen, ncol=nmen)
 #' uW = matrix(runif(nwomen*nmen), nrow=nmen, ncol=nwomen)
-#' results = one2one(uM, uW)
-#' checkStability(uM, uW, results$proposals, results$engagements)
+#' results = galeShapley.marriageMarket(uM, uW)
+#' galeShapley.checkStability(uM, uW, results$proposals, results$engagements)
 #'
 #' # college admissions problem
 #' nstudents = 25
 #' ncolleges = 5
 #' uStudents = matrix(runif(nstudents*ncolleges), nrow=ncolleges, ncol=nstudents)
 #' uColleges = matrix(runif(nstudents*ncolleges), nrow=nstudents, ncol=ncolleges)
-#' results = one2many(uStudents, uColleges, slots=4)
-#' checkStability(uStudents, uColleges, results$proposals, results$engagements)
+#' results = galeShapley.collegeAdmissions(studentUtils = uStudents,
+#'                                         collegeUtils = uColleges,
+#'                                         slots = 4)
+#' results
+#' # check stability
+#' galeShapley.checkStability(uStudents,
+#'                            uColleges,
+#'                            results$matched.students,
+#'                            results$matched.colleges)
 #'
 #' # stable roommate problem
+#' set.seed(2)
 #' N = 10
 #' u = matrix(runif(N^2),  nrow = N, ncol = N)
-#' results = onesided(utils = u)
+#' results = roommate(utils = u)
+#' results
+#' # check stability
+#' roommate.checkStability(utils = u, matching = results)
 #'
 #' # top trading cycle algorithm
 #' N = 10
 #' u = matrix(runif(N^2),  nrow = N, ncol = N)
 #' results = toptrading(utils = u)
+#' results
+#' # check stability
+#' toptrading.checkStability(utils = u, matching = results)
 NULL
-
-#' Make a package environmental variable with the storage order
-#'
-#' \code{pkg.env} is a package environment that contains the variable
-#' \code{column.major} that indicates if preferences are stored in column
-#' major order (default) or row major order.
-pkg.env = new.env()
-assign("column.major", TRUE, envir = pkg.env)
-
-#' Store preference in row major order
-#'
-#' After calling this functions, all preferences should be stored in row major
-#' order.
-set.row.major = function() {
-    assign("column.major", FALSE, envir = pkg.env)
-}
-
-#' Store preferences in column major order
-#'
-#' After calling this functions, all preferences should be stored in column major
-#' order. This is the default.
-set.column.major = function() {
-    assign("column.major", TRUE, envir = pkg.env)
-}
-
-# Startup message
-.onAttach = function(libname, pkgname) {
-
-    packageStartupMessage(
-        "\n=================================\n",
-        "matchingR 1.1.x Update Information:\n",
-        "=================================\n",
-        "With this update, we changed the layout of payoff and preference order \n",
-        "matrices. In the matrix `u`, element [i,j] now refers to the utility that \n",
-        "agent [j] receives from being matched to agent [i]. Similarly, in the matrix \n",
-        "`pref`, element [i,j] refers to the id of the individual that agent `j` \n",
-        "ranks at position `i`. I.e., we store payoffs and preference orders in \n",
-        "column-major order instead of row-major order.\n\n",
-        "If you rather store preferences in row-major order as in version 1.0 of \n",
-        "this package, you need to load the package using \n\n",
-        "library(\"matchingR\")\n",
-        "set.row.major()\n\n", appendLF = TRUE)
-
-}

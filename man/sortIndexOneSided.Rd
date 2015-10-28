@@ -7,15 +7,16 @@
 sortIndexOneSided(u)
 }
 \arguments{
-\item{u}{A matrix with agent's cardinal preferences. Column i is agent i's preferences.}
+\item{u}{A matrix with agents' cardinal preferences. Column i is agent i's
+preferences.}
 }
 \value{
-A list with the matchings made.
+a matrix with the agents' ordinal preferences
 }
 \description{
-Returns the rank of each element with each column of a matrix. So,
-if row 34 is the highest number for column 3, then the first row of
-column 3 will be 34 -- unless it is column 34, in which case it will
-be 35, to adjust for the fact that this is a single-sided market.
+Returns the rank of each element with each column of a matrix. So, if row 34
+is the highest number for column 3, then the first row of column 3 will be
+34 -- unless it is column 34, in which case it will be 35, to adjust for the
+fact that this is a single-sided market.
 }
 
