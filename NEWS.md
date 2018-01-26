@@ -1,3 +1,16 @@
+# matchingR 1.3
+
+ * Allow colleges to have different numbers of slots [#31](https://github.com/jtilly/matchingR/issues/31)
+ * Change row names in vignette [#34](https://github.com/jtilly/matchingR/issues/34)
+ * Remove need for microbenchmark package [#35](https://github.com/jtilly/matchingR/issues/35)
+ * Registration of entry points in compiled code 
+
+# matchingR 1.2.2
+
+This is a minor update. 
+
+ * Colleges may have different numbers of slots in the college admissions problem ([#30](https://github.com/jtilly/matchingR/issues/30))
+
 # matchingR 1.2.1
 
 This is a minor update. 
