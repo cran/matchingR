@@ -14,61 +14,7 @@
 
 <title>Matching Algorithms in R and C++: An Introduction to matchingR</title>
 
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
-<style type="text/css">
-a.anchor-section {margin-left: 10px; visibility: hidden; color: inherit;}
-a.anchor-section::before {content: '#';}
-.hasAnchor:hover a.anchor-section {visibility: visible;}
-</style>
-<script>// Anchor sections v1.0 written by Atsushi Yasumoto on Oct 3rd, 2020.
-document.addEventListener('DOMContentLoaded', function() {
-  // Do nothing if AnchorJS is used
-  if (typeof window.anchors === 'object' && anchors.hasOwnProperty('hasAnchorJSLink')) {
-    return;
-  }
-
-  const h = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-
-  // Do nothing if sections are already anchored
-  if (Array.from(h).some(x => x.classList.contains('hasAnchor'))) {
-    return null;
-  }
-
-  // Use section id when pandoc runs with --section-divs
-  const section_id = function(x) {
-    return ((x.classList.contains('section') || (x.tagName === 'SECTION'))
-            ? x.id : '');
-  };
-
-  // Add anchors
-  h.forEach(function(x) {
-    const id = x.id || section_id(x.parentElement);
-    if (id === '') {
-      return null;
-    }
-    let anchor = document.createElement('a');
-    anchor.href = '#' + id;
-    anchor.classList = ['anchor-section'];
-    x.classList.add('hasAnchor');
-    x.appendChild(anchor);
-  });
-});
-</script>
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -80,21 +26,28 @@ document.addEventListener('DOMContentLoaded', function() {
     </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -114,7 +67,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -171,225 +124,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 800px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 20px;
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
 }
-#header {
-text-align: center;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-#TOC {
-clear: both;
-margin: 0 0 10px 0;
-padding: 4px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
+div.csl-indent {
+  margin-left: 2em;
 }
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table:not([class]) {
-margin: auto;
-min-width: 40%;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table[summary="R argblock"] {
-width: 100%;
-border: none;
-}
-table:not([class]) th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table:not([class]) td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table:not([class]), table:not([class]) th, table:not([class]) td {
-border-left-style: none;
-border-right-style: none;
-}
-table:not([class]) tr.odd {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 13px;
-padding-bottom: 1px;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f5f5f5;
-border-radius: 3px;
-color: #333;
-}
-pre {
-overflow-x: auto;
-border-radius: 3px;
-margin: 5px 0 10px 0;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: white;
-border: #f5f5f5 1px solid;
-}
-pre:not([class]) code {
-color: #444;
-background-color: white;
-}
-code {
-font-family: monospace;
-font-size: 90%;
-}
-p > code, li > code {
-padding: 2px 4px;
-color: #d14;
-border: 1px solid #e1e1e8;
-white-space: inherit;
-}
-div.figure {
-text-align: center;
-}
-table > caption, div.figure p.caption {
-font-style: italic;
-}
-table > caption span, div.figure p.caption span {
-font-style: normal;
-font-weight: bold;
-}
-p {
-margin: 0 0 10px;
-}
-table:not([class]) {
-margin: auto auto 10px auto;
-}
-img:not([class]) {
-background-color: #FFFFFF;
-padding: 2px;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-max-width: 100%;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f5f5f5;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f5f5f5;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f5f5f5;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
-div.r-help-page {
-background-color: #f9f9f9;
-border-bottom: #ddd 1px solid;
-margin-bottom: 10px;
-padding: 10px;
-}
-div.r-help-page:hover {
-background-color: #f4f4f4;
-}
-
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; } 
-code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20800px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%2020px%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%200%3B%0Apadding%3A%204px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%3Anot%28%5Bclass%5D%29%20%7B%0Amargin%3A%20auto%3B%0Amin%2Dwidth%3A%2040%25%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%5Bsummary%3D%22R%20argblock%22%5D%20%7B%0Awidth%3A%20100%25%3B%0Aborder%3A%20none%3B%0A%7D%0Atable%3Anot%28%5Bclass%5D%29%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%3Anot%28%5Bclass%5D%29%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%3Anot%28%5Bclass%5D%29%2C%20table%3Anot%28%5Bclass%5D%29%20th%2C%20table%3Anot%28%5Bclass%5D%29%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%3Anot%28%5Bclass%5D%29%20tr%2Eodd%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%2013px%3B%0Apadding%2Dbottom%3A%201px%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f5f5f5%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0A%7D%0Apre%20%7B%0Aoverflow%2Dx%3A%20auto%3B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200%2010px%200%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20white%3B%0Aborder%3A%20%23f5f5f5%201px%20solid%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20code%20%7B%0Acolor%3A%20%23444%3B%0Abackground%2Dcolor%3A%20white%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20monospace%3B%0Afont%2Dsize%3A%2090%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%204px%3B%0Acolor%3A%20%23d14%3B%0Aborder%3A%201px%20solid%20%23e1e1e8%3B%0Awhite%2Dspace%3A%20inherit%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Atable%20%3E%20caption%2C%20div%2Efigure%20p%2Ecaption%20%7B%0Afont%2Dstyle%3A%20italic%3B%0A%7D%0Atable%20%3E%20caption%20span%2C%20div%2Efigure%20p%2Ecaption%20span%20%7B%0Afont%2Dstyle%3A%20normal%3B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%200%2010px%3B%0A%7D%0Atable%3Anot%28%5Bclass%5D%29%20%7B%0Amargin%3A%20auto%20auto%2010px%20auto%3B%0A%7D%0Aimg%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0Amax%2Dwidth%3A%20100%25%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f5f5f5%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f5f5f5%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f5f5f5%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Adiv%2Er%2Dhelp%2Dpage%20%7B%0Abackground%2Dcolor%3A%20%23f9f9f9%3B%0Aborder%2Dbottom%3A%20%23ddd%201px%20solid%3B%0Amargin%2Dbottom%3A%2010px%3B%0Apadding%3A%2010px%3B%0A%7D%0Adiv%2Er%2Dhelp%2Dpage%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23f4f4f4%3B%0A%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
 
 
 
@@ -421,18 +179,18 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Consider the following marriage market: There are <code>N</code> men and <code>N</code> women. Each man, <code>m</code>, receives utility <code>uM(w, m)</code> from a match with woman <code>w</code>, and similarly each woman receives a payoff of <code>uW(m, w)</code> from being matched with a man.</p>
 <p>A matching assigns men to women such that each man is assigned to one woman and each woman is assigned to one man. A matching is <strong>stable</strong> if there is no man and woman who would jointly prefer to be matched to each other over their current spouses. In other words, a matching is stable if there are no pairs <code>(m, w&#39;), (m&#39;, w)</code>, such that <code>m</code> is matched with <code>w&#39;</code>, <code>m&#39;</code> is matched with <code>w</code>, and both <code>uW(m, w) &gt; uW(m&#39;, w)</code> and <code>uM(m, w) &gt; uM(m, w&#39;)</code>.</p>
 <p>For example, we might have preferences for men given by</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>uM =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.0</span>,</span>
-<span id="cb1-2"><a href="#cb1-2"></a>              <span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.5</span>,</span>
-<span id="cb1-3"><a href="#cb1-3"></a>              <span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span>), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>uM <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.0</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>              <span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.5</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>              <span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##          cols
 ## rows      Man 1 Man 2 Man 3
 ##   Woman 1   1.0   0.5   0.0
 ##   Woman 2   0.5   0.0   0.5
 ##   Woman 3   0.0   1.0   1.0</code></pre>
 <p>In this example, man <code>1</code> receives a payoff of <code>1.0</code> from being matched to woman <code>1</code>, a payoff of <code>0.5</code> from being matched to woman <code>2</code> and a payoff of <code>0.0</code> from being matched to woman 3 (same logic applies to men <code>2</code> and <code>3</code>). Similarly, we might have preferences for women given by</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>uW =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>,</span>
-<span id="cb3-2"><a href="#cb3-2"></a>              <span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.5</span>,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>              <span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>uW <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>              <span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.5</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>              <span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##        cols
 ## rows    Woman 1 Woman 2 Woman 3
 ##   Man 1     0.0     1.0     0.0
@@ -440,18 +198,18 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##   Man 3     1.0     0.5     1.0</code></pre>
 <p>Here, columns in the matrix correspond to women, rows to men. In this example, woman <code>1</code> receives a payoff of <code>0.0</code> from being matched to man <code>1</code>, a payoff of <code>0.5</code> from being matched to man <code>2</code> and a payoff of <code>1.0</code> from being matched to man 3 (same logic applies to women <code>2</code> and <code>3</code>).</p>
 <p>Instead of using payoff matrices, we can also represent preferences using preference orderings. The preference ordering that corresponds to <code>uM</code> is</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>prefM =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>,</span>
-<span id="cb5-2"><a href="#cb5-2"></a>                 <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>,</span>
-<span id="cb5-3"><a href="#cb5-3"></a>                 <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>prefM <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##         cols
 ## rows     Man 1 Man 2 Man 3
 ##   Rank 1     1     3     3
 ##   Rank 2     2     1     2
 ##   Rank 3     3     2     1</code></pre>
 <p><code>prefM</code> states that man <code>1</code> prefers woman <code>1</code> over woman <code>2</code> over woman <code>3</code>, etc. The preference ordering that corresponds to <code>uW</code> is given by</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>prefW =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>,</span>
-<span id="cb7-2"><a href="#cb7-2"></a>                 <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>,</span>
-<span id="cb7-3"><a href="#cb7-3"></a>                 <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>prefW <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">2</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>##         cols
 ## rows     Woman 1 Woman 2 Woman 3
 ##   Rank 1       3       1       3
@@ -508,18 +266,18 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </tbody>
 </table>
 <p>The package computes the Gale-Shapley algorithm using the function <code>galeShapley.marriageMarket</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>matching =<span class="st"> </span><span class="kw">galeShapley.marriageMarket</span>(uM, uW)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>matching <span class="ot">=</span> <span class="fu">galeShapley.marriageMarket</span>(uM, uW)</span></code></pre></div>
 <p>Note that we can obtain equivalent results when we use <code>prefM</code> and <code>prefW</code> as arguments:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>matching =<span class="st"> </span><span class="kw">galeShapley.marriageMarket</span>(<span class="dt">proposerPref =</span> prefM, <span class="dt">reviewerPref =</span> prefW)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>matching <span class="ot">=</span> <span class="fu">galeShapley.marriageMarket</span>(<span class="at">proposerPref =</span> prefM, <span class="at">reviewerPref =</span> prefW)</span></code></pre></div>
 <p>The function <code>galeShapley.marriageMarket</code> returns a list <code>matching</code> that includes the vectors <code>proposals</code> and <code>engagements</code> with the final proposals and engagements, respectively. These two vectors contain the same information (i.e. they tell us who is matched with whom). For the example above, the vector of proposals contains</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>matching<span class="op">$</span>proposals</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>matching<span class="sc">$</span>proposals</span></code></pre></div>
 <pre><code>##        cols
 ## rows    Proposed to Woman
 ##   Man 1                 2
 ##   Man 2                 1
 ##   Man 3                 3</code></pre>
 <p>The first element in the vector tells us that man <code>1</code> is matched with woman <code>2</code>. Man <code>2</code> is matched to woman <code>1</code>, and man <code>3</code> is matched to woman <code>3</code>. The vector of engagement contains</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>matching<span class="op">$</span>engagements</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>matching<span class="sc">$</span>engagements</span></code></pre></div>
 <pre><code>##          cols
 ## rows      Engaged to Man
 ##   Woman 1              2
@@ -527,7 +285,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##   Woman 3              3</code></pre>
 <p>The first element in the vector tells us that woman <code>1</code> is matched to man <code>2</code>, woman <code>2</code> will be matched to man <code>1</code>, and woman <code>3</code> will be matched to man <code>3</code>.</p>
 <p>We can then check if the computed matching is stable using the function <code>checkStability</code>. To check if a matching is stable, we check for each assignment <code>(m,w)</code> if there is some other woman <code>w&#39;</code> that man <code>m</code> would rather be matched with and who would rather be matched to man <code>m</code>. This function will return <code>true</code> if the matching is stable and <code>false</code> otherwise.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">galeShapley.checkStability</span>(uM, uW, matching<span class="op">$</span>proposals, matching<span class="op">$</span>engagements)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">galeShapley.checkStability</span>(uM, uW, matching<span class="sc">$</span>proposals, matching<span class="sc">$</span>engagements)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>For the simple 3-by-3 example, we can perform this check by hand:</p>
 <ul>
@@ -540,58 +298,58 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="example-marriage-market" class="section level3">
 <h3>Example: Marriage Market</h3>
 <p>The following is an example of <code>galeShapley.marriageMarket</code> with different numbers of participants on each side of the market. There are 2,500 women and 2,000 men. By construction, 500 men will remain unmatched. We randomly generate payoff matrices <code>uM</code> and <code>uW</code> which are drawn from a uniform distribution (<code>runif</code>). We then compute the male-optimal (i.e. men are proposing) and the female-optimal (i.e. woman are proposing) matching.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># set seed</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="co"># set number of men</span></span>
-<span id="cb17-4"><a href="#cb17-4"></a>nmen =<span class="st"> </span><span class="dv">2500</span></span>
-<span id="cb17-5"><a href="#cb17-5"></a><span class="co"># set number of women</span></span>
-<span id="cb17-6"><a href="#cb17-6"></a>nwomen =<span class="st"> </span><span class="dv">2000</span></span>
-<span id="cb17-7"><a href="#cb17-7"></a><span class="co"># generate preferences</span></span>
-<span id="cb17-8"><a href="#cb17-8"></a>uM =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(nmen<span class="op">*</span>nwomen), <span class="dt">nrow =</span> nwomen, <span class="dt">ncol =</span> nmen)</span>
-<span id="cb17-9"><a href="#cb17-9"></a>uW =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(nmen<span class="op">*</span>nwomen), <span class="dt">nrow =</span> nmen, <span class="dt">ncol =</span> nwomen)</span>
-<span id="cb17-10"><a href="#cb17-10"></a><span class="co"># male-optimal matching</span></span>
-<span id="cb17-11"><a href="#cb17-11"></a>resultsM =<span class="st"> </span><span class="kw">galeShapley.marriageMarket</span>(uM, uW)</span>
-<span id="cb17-12"><a href="#cb17-12"></a><span class="kw">str</span>(resultsM)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set number of men</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>nmen <span class="ot">=</span> <span class="dv">2500</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set number of women</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>nwomen <span class="ot">=</span> <span class="dv">2000</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># generate preferences</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>uM <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(nmen<span class="sc">*</span>nwomen), <span class="at">nrow =</span> nwomen, <span class="at">ncol =</span> nmen)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>uW <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(nmen<span class="sc">*</span>nwomen), <span class="at">nrow =</span> nmen, <span class="at">ncol =</span> nwomen)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># male-optimal matching</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>resultsM <span class="ot">=</span> <span class="fu">galeShapley.marriageMarket</span>(uM, uW)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(resultsM)</span></code></pre></div>
 <pre><code>## List of 4
 ##  $ proposals       : num [1:2500, 1] 927 1644 1965 1851 349 ...
 ##  $ engagements     : num [1:2000, 1] 386 471 1582 598 1657 ...
 ##  $ single.proposers: num [1:500] 8 11 17 19 26 30 34 37 49 53 ...
 ##  $ single.reviewers: num(0)</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">galeShapley.checkStability</span>(uM, uW, resultsM<span class="op">$</span>proposals, resultsM<span class="op">$</span>engagements)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">galeShapley.checkStability</span>(uM, uW, resultsM<span class="sc">$</span>proposals, resultsM<span class="sc">$</span>engagements)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># female-optimal matching</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a>resultsW =<span class="st"> </span><span class="kw">galeShapley.marriageMarket</span>(uW, uM)</span>
-<span id="cb21-3"><a href="#cb21-3"></a><span class="kw">str</span>(resultsW)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># female-optimal matching</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>resultsW <span class="ot">=</span> <span class="fu">galeShapley.marriageMarket</span>(uW, uM)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(resultsW)</span></code></pre></div>
 <pre><code>## List of 4
 ##  $ proposals       : num [1:2000, 1] 386 471 1582 598 1657 ...
 ##  $ engagements     : num [1:2500, 1] 927 1644 1965 1851 349 ...
 ##  $ single.proposers: num(0) 
 ##  $ single.reviewers: num [1:500] 8 11 17 19 26 30 34 37 49 53 ...</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">galeShapley.checkStability</span>(uW, uM, resultsW<span class="op">$</span>proposals, resultsW<span class="op">$</span>engagements)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">galeShapley.checkStability</span>(uW, uM, resultsW<span class="sc">$</span>proposals, resultsW<span class="sc">$</span>engagements)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="example-college-admissions-problem" class="section level3">
 <h3>Example: College Admissions Problem</h3>
 <p>The following is an example of <code>galeShapley.collegeAdmissions</code> where 1000 students get matched to 400 colleges, where each college has two slots. By construction, 200 students will remain unmatched. We draw students’ and colleges’ preferences, <code>uStudents</code> and <code>uColleges</code>, respectively, by from a uniform distribution.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># set seed</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb25-3"><a href="#cb25-3"></a><span class="co"># set number of students</span></span>
-<span id="cb25-4"><a href="#cb25-4"></a>nstudents =<span class="st"> </span><span class="dv">1000</span></span>
-<span id="cb25-5"><a href="#cb25-5"></a><span class="co"># set number of colleges</span></span>
-<span id="cb25-6"><a href="#cb25-6"></a>ncolleges =<span class="st"> </span><span class="dv">400</span></span>
-<span id="cb25-7"><a href="#cb25-7"></a><span class="co"># generate preferences</span></span>
-<span id="cb25-8"><a href="#cb25-8"></a>uStudents =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(ncolleges<span class="op">*</span>nstudents), <span class="dt">nrow =</span> ncolleges, <span class="dt">ncol =</span> nstudents)</span>
-<span id="cb25-9"><a href="#cb25-9"></a>uColleges =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(nstudents<span class="op">*</span>ncolleges), <span class="dt">nrow =</span> nstudents, <span class="dt">ncol =</span> ncolleges)</span>
-<span id="cb25-10"><a href="#cb25-10"></a><span class="co"># student-optimal matching</span></span>
-<span id="cb25-11"><a href="#cb25-11"></a>results =<span class="st"> </span><span class="kw">galeShapley.collegeAdmissions</span>(<span class="dt">studentUtils =</span>  uStudents, <span class="dt">collegeUtils =</span>  uColleges, <span class="dt">slots =</span> <span class="dv">2</span>)</span>
-<span id="cb25-12"><a href="#cb25-12"></a><span class="kw">str</span>(results)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set number of students</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>nstudents <span class="ot">=</span> <span class="dv">1000</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set number of colleges</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>ncolleges <span class="ot">=</span> <span class="dv">400</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># generate preferences</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>uStudents <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(ncolleges<span class="sc">*</span>nstudents), <span class="at">nrow =</span> ncolleges, <span class="at">ncol =</span> nstudents)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>uColleges <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(nstudents<span class="sc">*</span>ncolleges), <span class="at">nrow =</span> nstudents, <span class="at">ncol =</span> ncolleges)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># student-optimal matching</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">galeShapley.collegeAdmissions</span>(<span class="at">studentUtils =</span>  uStudents, <span class="at">collegeUtils =</span>  uColleges, <span class="at">slots =</span> <span class="dv">2</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(results)</span></code></pre></div>
 <pre><code>## List of 4
 ##  $ unmatched.students: num [1:200] 3 15 23 29 30 36 44 46 48 49 ...
 ##  $ unmatched.colleges: int(0) 
-##  $ matched.colleges  : num [1:400, 1:2] 728 887 28 372 875 775 456 937 402 774 ...
+##  $ matched.colleges  : num [1:400, 1:2] 576 887 28 551 926 775 456 553 402 917 ...
 ##  $ matched.students  : int [1:1000, 1] 52 70 NA 210 155 170 238 16 371 391 ...</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># check if matching is stable</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a><span class="kw">galeShapley.checkStability</span>(uStudents, uColleges, results<span class="op">$</span>matched.students, results<span class="op">$</span>matched.colleges)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check if matching is stable</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">galeShapley.checkStability</span>(uStudents, uColleges, results<span class="sc">$</span>matched.students, results<span class="sc">$</span>matched.colleges)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
 </div>
@@ -600,14 +358,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>This package implements the algorithm by <span class="citation">Irving (1985)</span> for one-sided matching markets.</p>
 <p>Consider the following example: A set of <code>n</code> potential roommates, each with ranked preferences over all the other potential roommates, are to be matched to rooms, two roommates per room. A matching is <strong>stable</strong> if there is no roommate <code>r1</code> that would rather be matched to some other roommate <code>d2</code> than to his current roommate <code>r2</code> and the other roommate <code>d2</code> would rather be matched to <code>r1</code> than to his current roommate <code>d1</code>.</p>
 <p>Preferences of potential roommates are summarized by an <span class="math inline">\(n-1 \times n\)</span> dimensional matrix, e.g., if <span class="math inline">\(n = 6\)</span>,</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>pref =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">5</span>,</span>
-<span id="cb29-2"><a href="#cb29-2"></a>                <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>,</span>
-<span id="cb29-3"><a href="#cb29-3"></a>                <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>,</span>
-<span id="cb29-4"><a href="#cb29-4"></a>                <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">4</span>,</span>
-<span id="cb29-5"><a href="#cb29-5"></a>                <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">2</span>), <span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol =</span> <span class="dv">6</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pref <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">5</span>,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">3</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">4</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">2</span>), <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">6</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>Column <code>i</code> represents the preferences of the <code>i</code>th roommate, and row <code>j</code> represents the ranking of the roommate whose index is encoded in that row. For example, in the above preference matrix, roommate <code>1</code> most prefers to be matched with roommate <code>3</code>, followed by <code>4</code>, followed by <code>2</code>.</p>
 <p>The function <code>roommate.checkPreferences</code> checks if a given preference order is complete, i.e. if all preferences are fully specified. If the preference order is complete, it will return the proper preference order using <code>C++</code> style indexing (beginning at <code>0</code> instead of at <code>1</code>). If the preference order is incomplete, the function will return an error.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">roommate.checkPreferences</span>(pref)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">roommate.checkPreferences</span>(pref)</span></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6]
 ## [1,]    2    5    1    4    2    4
 ## [2,]    3    4    3    1    0    0
@@ -633,8 +391,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 2, 4, 5, 3, 2,  
 6, 1,    6, 4, 4
    3,    1,    2</code></pre>
-<p>These preferences form what is called a ‘stable’ table, or, ‘s-table’. (‘Stable’ for short.) The defining characteristic of a stable table is that if <code>i</code> is the most preferred roommate on <code>j</code>s list, then <code>j</code> is the least preferred roommate on <code>i</code>s list. For example, <code>1</code> most prefers <code>4</code>, but <code>4</code> least prefers <code>1</code>.</p>
-<p>The algorithm proceeds by finding and eliminating ‘rotations’. A rotation is a sequence of pairs of roommates, such that there is a distinct roommate in the first position of each pair, the second roommate in each pair least prefers the roommate he is paired with, the first roommate in each pair most prefers the roommate he is paired with, and finally, the first roommate in each pair ranks the second roommate in the following pair second (modulo the number of pairs, that is, the first roommate in the last pair ranks the second roommate in the first pair second) Once a rotation has been identified, removing it results in another stable table.</p>
+<p>These preferences form what is called a ‘stable’ table, or, ‘s-table.’ (‘Stable’ for short.) The defining characteristic of a stable table is that if <code>i</code> is the most preferred roommate on <code>j</code>s list, then <code>j</code> is the least preferred roommate on <code>i</code>s list. For example, <code>1</code> most prefers <code>4</code>, but <code>4</code> least prefers <code>1</code>.</p>
+<p>The algorithm proceeds by finding and eliminating ‘rotations.’ A rotation is a sequence of pairs of roommates, such that there is a distinct roommate in the first position of each pair, the second roommate in each pair least prefers the roommate he is paired with, the first roommate in each pair most prefers the roommate he is paired with, and finally, the first roommate in each pair ranks the second roommate in the following pair second (modulo the number of pairs, that is, the first roommate in the last pair ranks the second roommate in the first pair second) Once a rotation has been identified, removing it results in another stable table.</p>
 <p>For example, <code>(1, 4), (3, 2)</code> is a rotation in the above table, because <code>1</code> loves <code>4</code>, <code>3</code> loves <code>2</code>, <code>4</code> hates <code>1</code>, <code>2</code> hates <code>3</code>, <code>2</code> is second on <code>1</code>s list, and <code>4</code> is second on <code>3</code>’s list. Eliminating this rotation involves <code>2</code> rejecting <code>3</code>, <code>4</code> rejecting <code>1</code>, and then we remove every successive potential roommate as well to preserve the stable table property, resulting in</p>
 <pre><code>   6,    5, 3,  
    5, 4, 2,    1
@@ -653,8 +411,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 6,
 </code></pre>
 <p>Therefore, a stable matching is for <code>1</code> and <code>6</code> to match, <code>2</code> and <code>4</code> to match, and <code>3</code> and <code>5</code> to match.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>results =<span class="st"> </span><span class="kw">roommate</span>(<span class="dt">pref =</span> pref)</span>
-<span id="cb36-2"><a href="#cb36-2"></a>results</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">roommate</span>(<span class="at">pref =</span> pref)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>results</span></code></pre></div>
 <pre><code>##      [,1]
 ## [1,]    6
 ## [2,]    4
@@ -663,16 +421,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [5,]    3
 ## [6,]    1</code></pre>
 <p>The function <code>roommate.checkStability</code> can be used to check if the resulting matching is stable:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">roommate.checkStability</span>(<span class="dt">pref =</span> pref, <span class="dt">matching =</span> results)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">roommate.checkStability</span>(<span class="at">pref =</span> pref, <span class="at">matching =</span> results)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div id="example-roommate-problem" class="section level3">
 <h3>Example: Roommate problem</h3>
 <p>The function <code>roommate</code> can also be called using a payoff matrix, <code>u</code>, to specify preferences. In <code>u</code>, the element <code>[i,j]</code> refers to the payoff that agent <code>j</code> gets from being matched to agent <code>i</code>. The main diagonal of this matrix contains no information and will be removed by the algorithm.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># generate preferences</span></span>
-<span id="cb40-2"><a href="#cb40-2"></a>N =<span class="st"> </span><span class="dv">10</span></span>
-<span id="cb40-3"><a href="#cb40-3"></a>u =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(N<span class="op">^</span><span class="dv">2</span>),  <span class="dt">nrow =</span> N, <span class="dt">ncol =</span> N)</span>
-<span id="cb40-4"><a href="#cb40-4"></a>results =<span class="st"> </span><span class="kw">roommate</span>(<span class="dt">utils =</span> u)</span>
-<span id="cb40-5"><a href="#cb40-5"></a>results</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># generate preferences</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>u <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(N<span class="sc">^</span><span class="dv">2</span>),  <span class="at">nrow =</span> N, <span class="at">ncol =</span> N)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">roommate</span>(<span class="at">utils =</span> u)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>results</span></code></pre></div>
 <pre><code>##       [,1]
 ##  [1,]    3
 ##  [2,]    4
@@ -684,17 +442,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ##  [8,]    9
 ##  [9,]    8
 ## [10,]    6</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">roommate.checkStability</span>(<span class="dt">utils =</span> u, <span class="dt">matching =</span> results)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">roommate.checkStability</span>(<span class="at">utils =</span> u, <span class="at">matching =</span> results)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="example-roommate-problem-when-no-stable-matching-exists" class="section level3">
 <h3>Example: Roommate problem when no stable matching exists</h3>
 <p>Note that in the roommate problem, existence of a stable matching is not guaranteed. When no stable matching can be found, the function <code>roommate</code> returns <code>NULL</code>.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="kw">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb44-2"><a href="#cb44-2"></a>N =<span class="st"> </span><span class="dv">512</span></span>
-<span id="cb44-3"><a href="#cb44-3"></a>u =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(N<span class="op">^</span><span class="dv">2</span>),  <span class="dt">nrow =</span> N, <span class="dt">ncol =</span> N)</span>
-<span id="cb44-4"><a href="#cb44-4"></a>results =<span class="st"> </span><span class="kw">roommate</span>(<span class="dt">utils =</span> u)</span>
-<span id="cb44-5"><a href="#cb44-5"></a><span class="kw">print</span>(results)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">512</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>u <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(N<span class="sc">^</span><span class="dv">2</span>),  <span class="at">nrow =</span> N, <span class="at">ncol =</span> N)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">roommate</span>(<span class="at">utils =</span> u)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(results)</span></code></pre></div>
 <pre><code>## NULL</code></pre>
 </div>
 </div>
@@ -703,10 +461,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>This package implements the top trading cycle algorithm.</p>
 <p>Consider the following problem: A set of <span class="math inline">\(n\)</span> agents each currently own their own home, and have preferences over the homes of other agents. The problem is to trade the homes between the agents in such a way so that no two agents want to swap homes.</p>
 <p>Preferences of agents are summarized by an <span class="math inline">\(n \times n\)</span> dimensional matrix, e.g., if <span class="math inline">\(n = 4\)</span>,</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>pref =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">4</span>,</span>
-<span id="cb46-2"><a href="#cb46-2"></a>                <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>,</span>
-<span id="cb46-3"><a href="#cb46-3"></a>                <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>,</span>
-<span id="cb46-4"><a href="#cb46-4"></a>                <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>), <span class="dt">nrow =</span> <span class="dv">4</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>pref <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">4</span>,</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>                <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>                <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>), <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol =</span> <span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>Column <span class="math inline">\(i\)</span> represents the preferences of the <span class="math inline">\(i\)</span>th agent, and row <span class="math inline">\(j\)</span> represents the ranking of the roommate whose index is encoded in that row. For example, in the above preference matrix, agent <code>1</code> most prefers the home of agent <code>4</code>, followed by <code>2</code>, followed by <code>1</code>, followed by <code>3</code>.</p>
 <p>Roughly speaking, the top trading cycle proceeds by identifying cycles of agents, then eliminating those cycles until no agents remain. A cycle is a sequence of agents such that each agent most prefers the next agent’s home (out of the remaining unmatched agents), and the last agent in the sequence most prefers the first agent in the sequence’s home.</p>
 <pre><code>4,  4,  2,  4
@@ -724,28 +482,28 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
         3
 </code></pre>
 <p>Therefore, the final matching is that agent <code>1</code> swaps with agent <code>2</code>, and agents <code>3</code> and <code>4</code> keep their own homes.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>results =<span class="st"> </span><span class="kw">toptrading</span>(<span class="dt">pref =</span> pref)</span>
-<span id="cb50-2"><a href="#cb50-2"></a>results</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">toptrading</span>(<span class="at">pref =</span> pref)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>results</span></code></pre></div>
 <pre><code>##      [,1]
 ## [1,]    2
 ## [2,]    1
 ## [3,]    3
 ## [4,]    4</code></pre>
 <p>The function <code>toptrading.checkStability</code> can be used to check if the resulting allocation is in fact stable:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="kw">toptrading.checkStability</span>(<span class="dt">pref =</span> pref, <span class="dt">matchings =</span> results)</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toptrading.checkStability</span>(<span class="at">pref =</span> pref, <span class="at">matchings =</span> results)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="literature" class="section level1 unnumbered">
-<h1>Literature</h1>
-<div id="refs" class="references">
-<div id="ref-gale1962college">
-<p>Gale, D., and L. Shapley. 1962. “College Admissions and the Stability of Marriage.” <em>American Mathematical Monthly</em> 69 (1): 9–15.</p>
+<h1 class="unnumbered">Literature</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-gale1962college" class="csl-entry">
+Gale, D., and L. Shapley. 1962. <span>“College Admissions and the Stability of Marriage.”</span> <em>American Mathematical Monthly</em> 69 (1): 9–15.
 </div>
-<div id="ref-irving1985roommates">
-<p>Irving, R. 1985. “An Efficient Algorithm for the &quot;Stable Roommates&quot; Problem.” <em>Journal of Algorithms</em> 6 (4): 577–95.</p>
+<div id="ref-irving1985roommates" class="csl-entry">
+Irving, R. 1985. <span>“An Efficient Algorithm for the &quot;Stable Roommates&quot; Problem.”</span> <em>Journal of Algorithms</em> 6 (4): 577–95.
 </div>
-<div id="ref-shapley1973cores">
-<p>Shapley, L., and H. Scarf. 1973. “On Cores and Indivisibility.” <em>Journal of Mathematical Economics</em> 1 (1): 23–37.</p>
+<div id="ref-shapley1973cores" class="csl-entry">
+Shapley, L., and H. Scarf. 1973. <span>“On Cores and Indivisibility.”</span> <em>Journal of Mathematical Economics</em> 1 (1): 23–37.
 </div>
 </div>
 </div>

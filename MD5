@@ -1,6 +1,6 @@
-0be016db6d129549a47e78b1d349f550 *DESCRIPTION
+4d0735eb20d21e6e736a0bc329f0fec5 *DESCRIPTION
 297fc16a33bc9ba044cdfcdbf8524d78 *NAMESPACE
-e382c9fce06ca97f48d2306b0fcc8006 *NEWS.md
+2062da29b920299620d2974c61b7a4ce *NEWS.md
 d83a120fc7ac30f7da4b66296547bfc0 *R/RcppExports.R
 cac53c60d8c51b79b818ae10159dcdc1 *R/deprecated.R
 82513fb67a21f25f52eab41821aa9c21 *R/galeshapley.R
@@ -9,10 +9,10 @@ cac53c60d8c51b79b818ae10159dcdc1 *R/deprecated.R
 c930f87b4cbcf95849d015cc3945dc68 *R/toptradingcycle.R
 14b09b74e4e99b864c1e1464dea6ba84 *R/utils.R
 f640fdddc4fb6c5f4570edecac40aeb3 *README.md
-cdfbc305f22c4cb2829128e4623df2f7 *build/vignette.rds
+53c73ecfe0ea8d566dd46c5d96634397 *build/vignette.rds
 2820da0e75c0990515f2f180d92935cf *inst/doc/matchingR-intro.R
 55f43a474450ab49d9fc1733066f0d47 *inst/doc/matchingR-intro.Rmd
-49dcbbcf076f58e815eab1d36f608054 *inst/doc/matchingR-intro.html
+554878d3490a56f23d5bfd2e2b2faf84 *inst/doc/matchingR-intro.html
 feee524957d8473e7daa3e5bbbbc838e *inst/include/matchingR.h
 f52366990d6a418c958e9c63cc81939a *man/cpp_wrapper_galeshapley.Rd
 7637ffb37fba91b5dd6a2698ef9ab0e6 *man/cpp_wrapper_galeshapley_check_stability.Rd
@@ -49,7 +49,7 @@ eee98c4a031e74426ad0b945e2dab081 *man/toptrading.checkStability.Rd
 c7f21b9249e6cffe590dcd52fbd22adc *src/utils.cpp
 e0ab44cf6d21dc8db763fb82734552d8 *src/utils.h
 835c3438b65a0cf56500ed760147f8ac *tests/testthat.R
-cd7243f653727e43065b6d4527e2fa36 *tests/testthat/test_galeshapley.R
+03841e64a43c921c98dd9b4aaf0649c8 *tests/testthat/test_galeshapley.R
 27925cace33326039bbc063f179b1301 *tests/testthat/test_helper.R
 1f968b01648811e79918044f229dbb20 *tests/testthat/test_roommate.R
 b34339ee087ef97a0ff34f0f59382c23 *tests/testthat/test_toptradingcycle.R
